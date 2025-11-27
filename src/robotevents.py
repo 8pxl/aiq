@@ -4,7 +4,7 @@ from typing import Any
 import requests
 from enum import Enum
 import db
-from tables import Qualification, Teams
+from tables import Qualification, Qualifications, Teams
 
 class RobotEvents:
     token: str
@@ -76,7 +76,7 @@ class RobotEvents:
     #         driver = driver
     #     )
     #     return team
-
+    #
     def parse_skills(self) ->list[Teams]:
         url = f"https://www.robotevents.com/api/seasons/{self.season}/skills?post_season=0&grade_level=High%20School"
         res = requests.get(url)
@@ -103,18 +103,19 @@ class RobotEvents:
                 country = country,
                 region = region,
                 grade = tt['gradeLevel'],  # pyright: ignore[reportAny]
-                qualification = self.get_qualifications(team['team']['id']),  # pyright: ignore[reportAny]
+                # qualification = self.get_qualifications(team['team']['id']),  # pyright: ignore[reportAny]
                 world_rank = team["rank"],
                 score = team["scores"]["score"],
                 programming = team["scores"]["programming"],
                 driver = team["scores"]["driver"]
             ))
-            if (len(teams) >=5):
+            if (len(teams) >=3000):
                 break
         return teams
 
     def get_worlds_teams(self) -> list[int] | None:
         event = "/events/58909/teams"
+
         res= self.request(event)
         if not res:
             return None
@@ -134,4 +135,29 @@ class RobotEvents:
                 teams.append(team["id"])
         return teams
 
-
+    def create_qualifications_full(self, teams: list[int]):
+        # worlds_teams = self.get_worlds_teams()
+        worlds_teams = None
+        q = Qualification.NONE
+        qualifications: list[Qualifications] = []
+        for team in teams:
+            print(len(qualifications))
+            if len(qualifications) > 5:
+                break;
+            if worlds_teams and team in worlds_teams:
+                q = Qualification.WORLD
+            else:
+                q = self.get_qualifications(team)
+            qualifications.append(
+                Qualifications(
+                    team_id =  team,
+                    status = q
+                )
+            )
+        return qualifications
+    
+    def create_qualifications_worlds_fast(self, teams: list[int]) -> list[Qualifications] | None:
+        worlds_teams = self.get_worlds_teams()
+        if not worlds_teams:
+            return None
+        return ([Qualifications(team_id=id, status = Qualification.WORLD) for id in worlds_teams])
