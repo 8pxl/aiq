@@ -21,6 +21,7 @@ class RobotEvents:
     def request(self, path: str) -> Any:  # pyright: ignore[reportExplicitAny, reportAny]
         if path[0] != "/":
             print("path needs to start with a blackslash")
+            return (None)
         url = self.base + path
         res = requests.get(url, headers=self.header)
         try:
@@ -34,9 +35,12 @@ class RobotEvents:
         highest = Qualification.NONE
         for award in awards:
             # print(award)
-            print(award["qualifications"])
-            print(award["title"])
-        return Qualification.REGIONAL
+            if (award["qualifications"]):
+                for qual in award["qualifications"]:
+                    new = Qualification.from_string(qual)
+                    if new.value > highest.value:
+                        highest = new
+        return highest
 
 
     def create_team(self, robotevents_id: int, score: tuple[int, int, int]) -> Teams:
