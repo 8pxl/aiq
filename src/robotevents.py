@@ -50,43 +50,84 @@ class RobotEvents:
         return highest
 
 
-    def create_team(self, robotevents_id: int, rank: int, score:int, programming: int, driver: int):
-        res = self.request(f"/teams/{robotevents_id}")
-        if not res:
-            return None
-        team = Teams(
-            id = res['id'],  # pyright: ignore[reportAny] 
-            number = res['number'],  # pyright: ignore[reportAny]
-            organization = res['organization'],   # pyright: ignore[reportAny]
-            country = res['location']['country'],  # pyright: ignore[reportAny]
-            registered = res['registered'],  # pyright: ignore[reportAny]
-            grade = res['grade'],  # pyright: ignore[reportAny]
-            qualification = self.get_qualifications(res['id']),  # pyright: ignore[reportAny]
-            world_rank = rank,
-            score = score,
-            programming = programming,
-            driver = driver
-        )
-        return team
+    # def create_team(self, robotevents_id: int,res: any, rank: int, score:int, programming: int, driver: int):
+    #     res = self.request(f"/teams/{robotevents_id}")
+    #     if not res:
+    #         return None
+    #
+    #     country: str = res['location']['country'],  # pyright: ignore[reportAny, reportAssignmentType]
+    #     region: str| None = res['location']['region']
+    #     if not region:
+    #         region = country
+    #     print("creaing team", id)
+    #     team = Teams(
+    #         id = res['id'],  # pyright: ignore[reportAny] 
+    #         number = res['number'],  # pyright: ignore[reportAny]
+    #         organization = res['organization'],   # pyright: ignore[reportAny]
+    #         country = country,
+    #         region = region,
+    #         registered = res['registered'],  # pyright: ignore[reportAny]
+    #         grade = res['grade'],  # pyright: ignore[reportAny]
+    #         qualification = self.get_qualifications(res['id']),  # pyright: ignore[reportAny]
+    #         world_rank = rank,
+    #         score = score,
+    #         programming = programming,
+    #         driver = driver
+    #     )
+    #     return team
 
     def parse_skills(self) ->list[Teams]:
-        url = "https://www.robotevents.com/api/seasons/197/skills?post_season=0&grade_level=High%20School"
+        url = f"https://www.robotevents.com/api/seasons/{self.season}/skills?post_season=0&grade_level=High%20School"
         res = requests.get(url)
         try:
             res.raise_for_status()
         except requests.RequestException as exc:
             self.logger.exception("API request failed: %s %s", url, exc)
         res = res.json()
-        # print("request went through!")
-        # print(res)
         teams = []
         for team in res:
-            id: int = team["team"]["id"]
-            rank: int = team["rank"]
-            score =team["scores"]["score"]
-            programming = team["scores"]["programming"]
-            driver = team["scores"]["driver"]
-            teams.append(self.create_team(id, rank, score, programming, driver))
-            if (len(teams) >= 5):
+            print("adding team ", team['number'])
+            country: str = res['location']['country'],  # pyright: ignore[reportAny, reportAssignmentType]
+            region: str| None = res['location']['region']
+            if not region:
+                region = country
+            teams.append(Teams(
+                id =team['id'],  # pyright: ignore[reportAny] 
+                number = team['number'],  # pyright: ignore[reportAny]
+                organization =team['organization'],   # pyright: ignore[reportAny]
+                country = country,
+                region = region,
+                registered = team['registered'],  # pyright: ignore[reportAny]
+                grade = res['grade'],  # pyright: ignore[reportAny]
+                qualification = self.get_qualifications(res['id']),  # pyright: ignore[reportAny]
+                world_rank = team["rank"],
+                score = team["scores"]["score"],
+                programming = team["scores"]["programming"],
+                driver = team["scores"]["driver"]
+            ))
+            if (len(teams) >=100):
                 break
         return teams
+
+    def get_worlds_teams(self) -> list[int] | None:
+        event = "/events/58909/teams"
+        res= self.request(event)
+        if not res:
+            return None
+        pages = res["meta"]["last_page"]
+        print(pages)
+        teams= []
+        for i in range(1, pages + 1):
+            if (i >= 2):
+                break
+            res= self.request(event+ f"?page={i}")
+            if not res:
+                continue
+            res = res["data"] 
+            page = 1
+            print(len(res))
+            for team in res: 
+                teams.append(team["id"])
+        return teams
+
+
