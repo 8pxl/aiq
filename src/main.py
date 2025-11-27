@@ -10,18 +10,19 @@ from dotenv import load_dotenv
 if not load_dotenv():
     print("loading .env failed")
 
-
-
 mysqlurl = f"mysql+pymysql://root:{os.environ["MYSQL_PASSWORD"]}@127.0.0.1:3306/test"
 engine = create_engine(mysqlurl, echo=True)
 SQLModel.metadata.create_all(engine)
 
 robotevents = RobotEvents(os.environ["ROBOTEVENTS_AUTH_TOKEN"])
-# team = robotevents.get_all_teams()
-# print(robotevents.get_qualifications(109693))
 teams = (robotevents.parse_skills())
 for team in teams:
-    db.add_team(engine,team)
+    db.upsert(engine,team)
     print("adding ", team)
+
+# worlds_registered = robotevents.get_worlds_teams()
+# if worlds_registered:
+#     for team in worlds_registered:
+#         db.qualify(engine, team)
 
 # add_teams(engine, team)
