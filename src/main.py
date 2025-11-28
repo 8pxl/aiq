@@ -3,7 +3,7 @@ from sqlalchemy import Engine
 from sqlmodel import  SQLModel, Session, create_engine
 import db
 from robotevents import RobotEvents
-from tables import Teams, Qualifications
+from tables import Qualification, Teams, Qualifications
 import os
 from dotenv import load_dotenv
 
@@ -15,17 +15,38 @@ mysqlurl = f"mysql+pymysql://root:{os.environ["MYSQL_PASSWORD"]}@127.0.0.1:3306/
 engine = create_engine(mysqlurl, echo=True)
 SQLModel.metadata.create_all(engine)
 
-print("fast step")
+# print("fast step")
 robotevents = RobotEvents(os.environ["ROBOTEVENTS_AUTH_TOKEN"])
-teams = (robotevents.parse_skills())
-for team in teams:
-    db.upsert(engine,team)
-    print("adding ", team)
 
-if db.get_last_qualification_update(engine) - datetime.now() > timedelta(weeks=1):
-    all_teams = db.get_all_teams(engine)
-    qualifications  = robotevents.create_qualifications_full(all_teams)
-    print("updating qualifications!")
-    for q in qualifications:
-        db.upsert(engine, q)
+# teams = robotevents.parse_skills(True)
+# for team in teams:
+#     db.upsert(engine,team)
+#     print("adding ", team)
+
+# print(robotevents.create_qualifications_sig())
+
+# qualifications = robotevents.create_qualifications_sig()
+# if qualifications:
+#     for q in qualifications:
+#         db.upsert_quals(engine, q)
+
+#
+# if db.get_last_qualification_update(engine) - datetime.now() > timedelta(weeks=1):
+# 169926
+# 186744
+
+all_teams = db.get_all_teams(engine)
+qualifications  = robotevents.create_qualifications_full(all_teams)
+print("updating qualifications!")
+for q in qualifications:
+    db.upsert_quals(engine, q)
+
+# manual_qualifications = ["15442A", "2054V", "16689A", "6008G", "884A", "3004A"]
+#
+# for id in [db.number_to_id(engine, number) for number in manual_qualifications]:
+#     db.upsert_quals(engine, Qualifications(
+#         team_id = id,
+#         status = Qualification.WORLD
+#     ))
+
 # self.create_qualifications_worlds_fast()
