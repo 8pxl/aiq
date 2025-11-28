@@ -19,7 +19,8 @@ class Qualification(Enum):
         return mapping.get(s, cls.NONE)
 
 class Metadata(SQLModel,table=True):
-    last_updated_qualifications: datetime = datetime.now()
+    id: int = Field(default=1, primary_key=True)
+    last_slow_update: datetime = datetime.now()
 
 class Qualifications(SQLModel, table=True):
     team_id: int = Field(

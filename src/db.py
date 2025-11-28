@@ -1,9 +1,21 @@
 from datetime import datetime
+import os
 from typing import Any
 from sqlalchemy import Engine
-from sqlmodel import Session, select
-from tables import Qualification, Qualifications, Teams
+from sqlmodel import SQLModel, Session, create_engine, select
+from tables import Qualification, Qualifications, Teams, Metadata
+from dotenv import load_dotenv
 
+if not load_dotenv():
+    print("loading .env failed")
+
+mysqlurl = f"mysql+pymysql://root:{os.environ["MYSQL_PASSWORD"]}@127.0.0.1:3306/test"
+engine = create_engine(mysqlurl, echo=True)
+SQLModel.metadata.create_all(engine)
+
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 def number_to_id(engine: Engine, number: str) -> int:
     with Session(engine) as session:
@@ -38,13 +50,22 @@ def qualify(engine: Engine, id: int):
             existing.qualification = Qualification.WORLD
         session.commit();
 
-# def set_update_time(engine: Engine):
-#     with Session(engine) as session:
-#         session.get(Metadata)
+def set_update_time(engine: Engine):
+    with Session(engine) as session:
+        metadata = session.get(Metadata, 1)
+        if not metadata:
+            print("metadata doesnt exist!")
+            return
+            # metadata =Metadata(id=1, last_slow_update=datetime.now())
+            # session.add(metadata)
+        metadata.last_slow_update = datetime.now()
+        session.commit()
 
-# def get_last_qualification_update(engine: Engine)-> datetime: 
-#     with Session(engine) as session:
-#         return(session.exec(select(Metadata.last_updated_qualifications)).one())
+
+
+def get_last_slow_update(engine: Engine)-> datetime: 
+    with Session(engine) as session:
+        return(session.exec(select(Metadata.last_slow_update)).one())
 
     # existing = session.get(Teams, team.id)
     #     if not existing:
