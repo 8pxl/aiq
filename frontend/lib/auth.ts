@@ -8,4 +8,7 @@ export const auth = betterAuth({
     database: 'test',
     password: process.env.MYSQL_PASSWORD
   }),
+  emailAndPassword: {
+    enabled: true,
+  }
 })
