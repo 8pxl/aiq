@@ -1,7 +1,9 @@
+import SignIn from "./components/auth/sign-in";
+
 export default function Home() {
   return (
     <main>
-      <div>Hello world!</div>
+      hello
     </main>
   );
 }

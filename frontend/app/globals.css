@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Borel&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:ital,wght@0,100..700;1,100..700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -80,6 +82,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.font-borel {
+  font-family: "Borel", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -87,5 +95,10 @@
   body {
 
     @apply bg-background text-foreground;
+
+    font-family: "Josefin Slab", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
   }
 }

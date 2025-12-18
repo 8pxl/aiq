@@ -23,93 +23,84 @@ export default function SignIn() {
   // }
 
   return (
-    <Card className="max-w-md">
-      <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
-        <CardDescription className="text-xs md:text-sm">
-          Enter your email below to login to your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              value={email}
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-
+    <div className="w-screen h-screen flex items-center justify-center">
+      <Card className="w-1/2">
+        <CardHeader>
+          <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
+          <CardDescription className="text-xs md:text-sm">
+            enter your email to sign in (devs only)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="keijay@gmail.com"
+                required
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                value={email}
+              />
             </div>
 
-            <Input
-              id="password"
-              type="password"
-              placeholder="password"
-              autoComplete="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
 
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id="remember"
-              onClick={() => {
-                setRememberMe(!rememberMe);
+              </div>
+
+              <Input
+                id="password"
+                type="password"
+                placeholder="password"
+                autoComplete="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+              onClick={async () => {
+                await signIn.email(
+                  {
+                    email,
+                    password
+                  },
+                  {
+                    onRequest: (ctx) => {
+                      setLoading(true);
+                    },
+                    onResponse: (ctx) => {
+                      if (ctx.response.status === 200) {
+                      }
+                      setLoading(false);
+                    },
+                  },
+                );
               }}
-            />
-            <Label htmlFor="remember">Remember me</Label>
+            >
+              {loading ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <p> Login</p>
+              )}
+            </Button>
+
+
+
+
           </div>
+        </CardContent>
 
-
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={loading}
-            onClick={async () => {
-              await signIn.email(
-                {
-                  email,
-                  password
-                },
-                {
-                  onRequest: (ctx) => {
-                    setLoading(true);
-                  },
-                  onResponse: (ctx) => {
-                    if (ctx.response.status === 200) {
-                    }
-                    setLoading(false);
-                  },
-                },
-              );
-            }}
-          >
-            {loading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <p> Login </p>
-            )}
-          </Button>
-
-
-
-
-        </div>
-      </CardContent>
-
-    </Card>
+      </Card>
+    </div >
   );
 }
