@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { jwt } from "better-auth/plugins"
 import { createPool } from "mysql2/promise";
 
 export const auth = betterAuth({
@@ -10,5 +11,14 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-  }
+  },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 10 * 60 // cache duration in seconds (10 minutes)
+    }
+  },
+  plugins: [
+    jwt(),
+  ]
 })
