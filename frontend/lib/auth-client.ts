@@ -14,3 +14,15 @@ export const {
   signUp,
   useSession
 } = authClient;
+
+export async function getjwt() {
+  const { data, error } = await authClient.token()
+  if (data) {
+    const jwtToken = data.token
+    return jwtToken
+  }
+  if (error) {
+    console.error(error)
+    return error
+  }
+}
