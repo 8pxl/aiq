@@ -36,6 +36,14 @@ def upsert_quals(session: Session, x: Qualifications):
         qual.status = Qualification(max(qual.status.value, x.status.value))
     session.commit()
 
+def update_quals(session: Session, x: Qualifications):
+    qual = session.get(Qualifications, x.team_id)
+    if not qual:
+        session.add(x)
+    else:
+        qual.status = x.status
+    session.commit()
+
 def qualify(session: Session, id: int):
     existing = session.get(Teams,id)
     if not existing:
@@ -57,3 +65,4 @@ def set_update_time(session: Session):
 
 def get_last_slow_update(session: Session)-> datetime: 
     return(session.exec(select(Metadata.last_slow_update)).one())
+

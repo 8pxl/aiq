@@ -55,8 +55,7 @@ class RobotEvents:
         return highest
 
 
-    # def create_team(self, robotevents_id: int,res: any, rank: int, score:int, programming: int, driver: int):
-    #     res = self.request(f"/teams/{robotevents_id}")
+    # def create_team(self, robotevents_id: int,res: any, rank: int, score:int, programming: int, driver: int): res = self.request(f"/teams/{robotevents_id}")
     #     if not res:
     #         return None
     #

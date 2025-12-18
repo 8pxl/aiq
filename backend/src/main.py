@@ -7,8 +7,8 @@ from tables import Qualification, Teams, Qualifications
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from api import *
 
-app = FastAPI()
 
 if not load_dotenv():
     print("loading .env failed")
@@ -53,6 +53,3 @@ SQLModel.metadata.create_all(db.engine)
 # self.create_qualifications_worlds_fast()
 #
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
