@@ -16,7 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 @app.get("/teams")
-def get_teams(session: Session = Depends(db.get_session)):
+def get_teams(session: Session = Depends(db.get_session)
+              user = ):
     return {"code": 1000, "result": db.get_all_teams(session)}
 
 @app.get("/lb")
