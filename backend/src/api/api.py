@@ -5,6 +5,14 @@ from api import auth
 import db
 from tables import Qualification, Qualifications, Teams
 
+from pydantic import BaseModel
+
+
+class TeamQualificationOut(BaseModel):
+    number: str
+    organization: str
+    status: Qualification
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -33,8 +41,32 @@ def get_leaderboard(
         "code": 1000,
         "message": session.exec(query)
     }
-@app.put("/qualification")
-def put_qualification(
+
+@app.get("/qualifications")
+def get_qualifications(session: Session = Depends(db.get_session),
+                       _ = Depends(auth.authenticate_user)):
+    stmt = (
+        select(  # pyright: ignore[reportCallIssue, reportUnknownMemberType]
+            Teams.number,
+            Teams.organization,
+            Qualifications.status,  # pyright: ignore[reportArgumentType]
+        )
+        .join(Qualifications)
+    )
+
+    rows = session.exec(stmt).all()
+
+    return [
+        TeamQualificationOut(
+            number=number,
+            organization=organization,
+            status=status,
+        )
+        for number, organization, status in rows
+    ]
+
+@app.put("/qualifications")
+def put_qualifications(
     team: int,
     s: str,
     session: Session = Depends(db.get_session)):
