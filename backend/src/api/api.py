@@ -18,12 +18,7 @@ app.add_middleware(
 )
 @app.get("/teams")
 def get_teams(session: Session = Depends(db.get_session),
-              authorization: str | None = Header()):
-    if not authorization:
-        return {"error": "No Authorization header"}
-    _, _, token = authorization.partition(" ")
-    if not auth.authenticate(session, token):
-        return {"code": 401, "error": "not authorized"}
+    _ = Depends(auth.authenticate_user)):
     return {"code":200, "result": db.get_all_teams(session)}
 
 @app.get("/lb")

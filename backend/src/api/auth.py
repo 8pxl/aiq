@@ -4,6 +4,7 @@ import os
 from typing import TypedDict, cast
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from fastapi import Depends, HTTPException, Header, status
 import jwt
 from dotenv import load_dotenv
 import requests
@@ -77,3 +78,12 @@ def authenticate(session: Session, token: str) -> bool:
     valid |= payload["iss"] == os.environ["BETTER_AUTH_URL"]
 
     return bool(valid)
+
+
+def authenticate_user(session: Session = Depends(db.get_session),
+                     authorization: str | None = Header(),):
+    if not authorization:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No Authorization header")
+    _, _, token = authorization.partition(" ")
+    if not authenticate(session, token):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized")
