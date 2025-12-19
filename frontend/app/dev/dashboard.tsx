@@ -1,10 +1,18 @@
 import Link from "next/link"
-import Quals from "./quals"
+import Quals, { QualsInput } from "./quals"
+import { authClient } from "@/lib/auth-client"
+import QualsDisplay from "./quals";
 
 function Header() {
+  async function handleSignOut(e: MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    await authClient.signOut()
+    window.location.href = "/";
+
+  }
   return (
     <div className="w-screen flex justify-between font-borel text-xl">
-      <Link href="/" className="">
+      <Link href="/" className="" onClick={handleSignOut}>
         amiqualled?
       </Link>
     </div>
@@ -19,10 +27,17 @@ function Welcome() {
 }
 export default function Dashboard() {
   return (
-    <div className="flex flex-col m-3">
+    <div className="flex flex-col m-3 h-[calc(100vh-24px)]">
       <Header />
       < Welcome />
-      <Quals />
-    </div>
+      <div className="grid grid-rows-3 grid-cols-3 border-1 border-white divide-x divide-y divide-white gap-0 overflow-auto">
+        <QualsDisplay />
+        <div></div>
+        <div></div>
+        <QualsInput />
+        <div></div>
+        <div></div>
+      </div>
+    </div >
   )
 }
