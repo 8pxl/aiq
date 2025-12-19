@@ -2,7 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from sqlalchemy.orm import Mapped
 from typing_extensions import Optional
-from sqlmodel import Column, Field, ForeignKey, Integer, Relationship, SQLModel
+from sqlmodel import Column, DateTime, Field, ForeignKey, Integer, Relationship, SQLModel
 from enum import Enum
 
 class Qualification(Enum):
@@ -48,3 +48,11 @@ class Teams(SQLModel, table=True):
     qualification_status: Qualifications = Relationship(back_populates="team")
 
 
+class User(SQLModel, table=True):
+    id: str = Field(primary_key=True)
+    name: str
+    email: str = Field(sa_column_kwargs={"unique": True})
+    emailVerified: bool
+    image: str | None = None
+    createdAt: datetime = datetime.now()
+    updatedAt: datetime = datetime.now()
