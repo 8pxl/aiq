@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, FastAPI
+from fastapi import APIRouter, Depends, FastAPI, Header
 from sqlmodel import Session, select
 
+from api import auth
 import db
 from tables import Qualification, Qualifications, Teams
 
@@ -16,9 +17,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 @app.get("/teams")
-def get_teams(session: Session = Depends(db.get_session)
-              user = ):
-    return {"code": 1000, "result": db.get_all_teams(session)}
+def get_teams(session: Session = Depends(db.get_session),
+              authorization: str | None = Header()):
+    if not authorization:
+        return {"error": "No Authorization header"}
+    _, _, token = authorization.partition(" ")
+    if not auth.authenticate(session, token):
+        return {"code": 401, "error": "not authorized"}
+    return {"code":200, "result": db.get_all_teams(session)}
 
 @app.get("/lb")
 def get_leaderboard(
