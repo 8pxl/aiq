@@ -19,6 +19,13 @@ export const auth = betterAuth({
     }
   },
   plugins: [
-    jwt(),
+    jwt({
+      jwks: {
+        keyPairConfig: {
+          alg: "EdDSA",
+          crv: "Ed25519"
+        }
+      }
+    }),
   ]
 })
