@@ -5,10 +5,9 @@ import db
 from robotevents import RobotEvents
 from tables import Qualification, Teams, Qualifications
 import os
-from dotenv import load_dotenv
 from fastapi import FastAPI
-from api import *
-
+from api.api import *
+from dotenv import load_dotenv
 
 if not load_dotenv():
     print("loading .env failed")

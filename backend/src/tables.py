@@ -1,7 +1,5 @@
 from __future__ import annotations
 from datetime import datetime
-from sqlalchemy.orm import Mapped
-from typing_extensions import Optional
 from sqlmodel import Column, DateTime, Field, ForeignKey, Integer, Relationship, SQLModel
 from enum import Enum
 
