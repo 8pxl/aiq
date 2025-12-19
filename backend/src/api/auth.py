@@ -40,12 +40,11 @@ def base64url_decode(s: str):
         s+= '=' * (4 - rem)
     return base64.urlsafe_b64decode(s)
 
-def authenticate(session: Session, token: str) -> bool:
+def auth_jwt(session: Session, token: str) -> bool:
     jwks_endpoint = f"{os.environ["BETTER_AUTH_URL"]}/api/auth/jwks"
     jwks = requests.get(jwks_endpoint)
     if not jwks:
         return False
-
     keys = cast(list[Jwk], jwks.json()["keys"])
 
     # docs didn't really say if there could be more than one keys so ill handle it when i see it
@@ -85,5 +84,5 @@ def authenticate_user(session: Session = Depends(db.get_session),
     if not authorization:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No Authorization header")
     _, _, token = authorization.partition(" ")
-    if not authenticate(session, token):
+    if not auth_jwt(session, token):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized")
