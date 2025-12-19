@@ -3,7 +3,7 @@ import os
 from typing import Any
 from sqlalchemy import Engine
 from sqlmodel import SQLModel, Session, create_engine, select
-from tables import Qualification, Qualifications, Teams, Metadata
+from tables import Qualification, Qualifications, Teams, Metadata, User
 from dotenv import load_dotenv
 
 if not load_dotenv():
@@ -65,4 +65,9 @@ def set_update_time(session: Session):
 
 def get_last_slow_update(session: Session)-> datetime: 
     return(session.exec(select(Metadata.last_slow_update)).one())
+
+def user_has_perms(session: Session, user_id: str) -> bool:
+    return(
+        user_id in session.exec(select(User.id))
+    )
 
