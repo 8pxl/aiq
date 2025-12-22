@@ -2,11 +2,45 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { getjwt } from "@/lib/auth-client"
 import { useEffect, useState } from "react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { InlineInput, Input } from "@/components/ui/input"
 
 export function QualsInput() {
+  const [team, setTeam] = useState("")
+  // const [qualification, setQualification] = 
   return (
-    <div className="w-full col-span-2">
-      hello
+    <div className="text-5xl w-full col-span-2 flex flex-col p-2">
+      <div className="text-sm text-right">
+        manual qualification adjustment
+      </div>
+      <div className="flex flex-col gap-1 w-full">
+        <div>
+          <span>change </span>
+          <InlineInput placeholder="86868R" className="uppercase text-5xl w-fit max-w-[4em]" />
+          <span>'s</span>
+        </div>
+        <div className="ml-[25%]">
+          qualification status to
+        </div>
+        <div className="ml-[70%]">
+          <Select>
+            <SelectTrigger className="italic">
+              <SelectValue placeholder="regionals" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="worlds">worlds</SelectItem>
+              <SelectItem value="regionals">regionals</SelectItem>
+              <SelectItem value="none">none</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
     </div>
   )
 }

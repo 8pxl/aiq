@@ -30,7 +30,7 @@ export default function Dashboard() {
     <div className="flex flex-col m-3 h-[calc(100vh-24px)]">
       <Header />
       < Welcome />
-      <div className="grid grid-rows-3 grid-cols-3 border-1 border-white divide-x divide-y divide-white gap-0 overflow-auto">
+      <div className="mt-2.5 grid grid-rows-3 grid-cols-3 border-1 border-white divide-x divide-y divide-white gap-0 overflow-auto">
         <QualsDisplay />
         <div></div>
         <div></div>
