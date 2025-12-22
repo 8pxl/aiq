@@ -1,7 +1,16 @@
 from __future__ import annotations
 from datetime import datetime
-from sqlmodel import Column, DateTime, Field, ForeignKey, Integer, Relationship, SQLModel
+from sqlmodel import (
+    Column,
+    DateTime,
+    Field,
+    ForeignKey,
+    Integer,
+    Relationship,
+    SQLModel,
+)
 from enum import Enum
+
 
 class Qualification(Enum):
     NONE = 0
@@ -12,13 +21,15 @@ class Qualification(Enum):
     def from_string(cls, s: str) -> Qualification:
         mapping = {
             "Event Region Championship": cls.REGIONAL,
-            "World Championship": cls.WORLD
+            "World Championship": cls.WORLD,
         }
         return mapping.get(s, cls.NONE)
 
-class Metadata(SQLModel,table=True):
+
+class Metadata(SQLModel, table=True):
     id: int = Field(default=1, primary_key=True)
     last_slow_update: datetime = datetime.now()
+
 
 class Qualifications(SQLModel, table=True):
     team_id: int = Field(
@@ -30,6 +41,7 @@ class Qualifications(SQLModel, table=True):
     )
     status: Qualification
     team: Teams = Relationship(back_populates="qualification_status")
+
 
 class Teams(SQLModel, table=True):
     id: int = Field(primary_key=True)

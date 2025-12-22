@@ -9,24 +9,35 @@ from dotenv import load_dotenv
 if not load_dotenv():
     print("loading .env failed")
 
-mysqlurl = f"mysql+pymysql://root:{os.environ["MYSQL_PASSWORD"]}@127.0.0.1:3306/test"
+mysqlurl = f"mysql+pymysql://root:{os.environ['MYSQL_PASSWORD']}@127.0.0.1:3306/test"
 engine = create_engine(mysqlurl, echo=True)
 SQLModel.metadata.create_all(engine)
+
 
 def get_session():
     with Session(engine) as session:
         yield session
 
+
 def number_to_id(session: Session, number: str) -> int:
-    return session.exec(select(Teams.id).where(Teams.number==number)).one()
+    return session.exec(select(Teams.id).where(Teams.number == number)).one()
+
 
 def get_all_teams(session: Session) -> list[int]:
     ids = []
-    return list(session.exec(select(Teams.id).where(Teams.region=="California - Region 4").where(Teams.grade=="High School")).all())
+    return list(
+        session.exec(
+            select(Teams.id)
+            .where(Teams.region == "California - Region 4")
+            .where(Teams.grade == "High School")
+        ).all()
+    )
+
 
 def upsert(session: Session, x: Any):
     _ = session.merge(x)
     session.commit()
+
 
 def upsert_quals(session: Session, x: Qualifications):
     qual = session.get(Qualifications, x.team_id)
@@ -36,6 +47,7 @@ def upsert_quals(session: Session, x: Qualifications):
         qual.status = Qualification(max(qual.status.value, x.status.value))
     session.commit()
 
+
 def update_quals(session: Session, x: Qualifications):
     qual = session.get(Qualifications, x.team_id)
     if not qual:
@@ -44,14 +56,16 @@ def update_quals(session: Session, x: Qualifications):
         qual.status = x.status
     session.commit()
 
+
 def qualify(session: Session, id: int):
-    existing = session.get(Teams,id)
+    existing = session.get(Teams, id)
     if not existing:
         print(f"team {id} doesnt exist yet!")
         return
     else:
         existing.qualification = Qualification.WORLD
-    session.commit();
+    session.commit()
+
 
 def set_update_time(session: Session):
     metadata = session.get(Metadata, 1)
@@ -63,11 +77,10 @@ def set_update_time(session: Session):
     metadata.last_slow_update = datetime.now()
     session.commit()
 
-def get_last_slow_update(session: Session)-> datetime: 
-    return(session.exec(select(Metadata.last_slow_update)).one())
+
+def get_last_slow_update(session: Session) -> datetime:
+    return session.exec(select(Metadata.last_slow_update)).one()
+
 
 def user_has_perms(session: Session, user_id: str) -> bool:
-    return(
-        user_id in session.exec(select(User.id))
-    )
-
+    return user_id in session.exec(select(User.id))

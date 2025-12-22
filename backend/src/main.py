@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from sqlalchemy import Engine
-from sqlmodel import  SQLModel, Session, create_engine
+from sqlmodel import SQLModel, Session, create_engine
 import db
 from robotevents import RobotEvents
 from tables import Qualification, Teams, Qualifications
@@ -51,4 +51,3 @@ SQLModel.metadata.create_all(db.engine)
 
 # self.create_qualifications_worlds_fast()
 #
-
