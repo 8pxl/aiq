@@ -68,16 +68,8 @@ def get_qualifications(session: Session = Depends(db.get_session),
 @app.put("/qualifications")
 def put_qualifications(
     team: int,
-    s: str,
+    status: Qualification,
     session: Session = Depends(db.get_session)):
-    status: Qualification = Qualification.NONE
-    match s.lower():
-        case "regional":
-            status = Qualification.REGIONAL
-        case "world":
-            status = Qualification.WORLD
-        case _:
-            status = Qualification.NONE
     db.update_quals(session, Qualifications(team_id = team, status = status))
         
 @app.get("/")
