@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { InlineInput, Input } from "@/components/ui/input"
+import { getQualificationsQualificationsGet, GetQualificationsQualificationsGetData } from "@/lib/client"
 
 export function QualsInput() {
   const [team, setTeam] = useState("")
@@ -51,16 +52,15 @@ export default function QualsDisplay() {
       try {
         const token = await getjwt()
         if (typeof token !== "string") return
-        const res = await fetch("http://127.0.0.1:8000/qualifications", {
+        const res = (await getQualificationsQualificationsGet({
           headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+            authorization: `Bearer ${token}`,
+          }
+        }))
+        if (!res.response.ok) {
+          throw new Error(`HTTP error! status: ${res.response.status}`);
         }
-        const json = await res.json();
-        setData(json);
+        setData(res.data);
 
       } catch (e) {
         console.error(e)
