@@ -134,7 +134,7 @@ export type PutQualificationsQualificationsPutData = {
         /**
          * Team
          */
-        team: number;
+        team: string;
         status: Qualification;
     };
     url: '/qualifications';

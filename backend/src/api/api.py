@@ -67,10 +67,10 @@ def get_qualifications(session: Session = Depends(db.get_session),
 
 @app.put("/qualifications")
 def put_qualifications(
-    team: int,
+    team: str,
     status: Qualification,
     session: Session = Depends(db.get_session)):
-    db.update_quals(session, Qualifications(team_id = team, status = status))
+    db.update_quals(session, Qualifications(team_id = db.number_to_id(session, team), status = status))
         
 @app.get("/")
 async def root():
