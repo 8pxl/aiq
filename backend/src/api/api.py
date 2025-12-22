@@ -13,6 +13,7 @@ class TeamQualificationOut(BaseModel):
     organization: str
     status: Qualification
 
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -24,35 +25,36 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
 @app.get("/teams")
-def get_teams(session: Session = Depends(db.get_session),
-    _ = Depends(auth.authenticate_user)):
-    return {"code":200, "result": db.get_all_teams(session)}
+def get_teams(
+    session: Session = Depends(db.get_session), _=Depends(auth.authenticate_user)
+):
+    return {"code": 200, "result": db.get_all_teams(session)}
+
 
 @app.get("/lb")
 def get_leaderboard(
     ms: bool = False,
     region: str | None = None,
-    session: Session = Depends(db.get_session)):
+    session: Session = Depends(db.get_session),
+):
     query = select(Teams)
     if ms:
         query = query.where(Teams.grade == "Middle School")
-    return {
-        "code": 1000,
-        "message": session.exec(query)
-    }
+    return {"code": 1000, "message": session.exec(query)}
+
 
 @app.get("/qualifications")
-def get_qualifications(session: Session = Depends(db.get_session),
-                       _ = Depends(auth.authenticate_user)):
-    stmt = (
-        select(  # pyright: ignore[reportCallIssue, reportUnknownMemberType]
-            Teams.number,
-            Teams.organization,
-            Qualifications.status,  # pyright: ignore[reportArgumentType]
-        )
-        .join(Qualifications)
-    )
+def get_qualifications(
+    session: Session = Depends(db.get_session), _=Depends(auth.authenticate_user)
+):
+    stmt = select(  # pyright: ignore[reportCallIssue, reportUnknownMemberType]
+        Teams.number,
+        Teams.organization,
+        Qualifications.status,  # pyright: ignore[reportArgumentType]
+    ).join(Qualifications)
 
     rows = session.exec(stmt).all()
 
@@ -65,13 +67,19 @@ def get_qualifications(session: Session = Depends(db.get_session),
         for number, organization, status in rows
     ]
 
+
 @app.put("/qualifications")
 def put_qualifications(
     team: str,
     status: Qualification,
-    session: Session = Depends(db.get_session)):
-    db.update_quals(session, Qualifications(team_id = db.number_to_id(session, team), status = status))
-        
+    session: Session = Depends(db.get_session),
+    _=Depends(auth.authenticate_user),
+):
+    db.update_quals(
+        session, Qualifications(team_id=db.number_to_id(session, team), status=status)
+    )
+
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}

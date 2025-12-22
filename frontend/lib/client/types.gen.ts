@@ -129,6 +129,12 @@ export type GetQualificationsQualificationsGetResponses = {
 
 export type PutQualificationsQualificationsPutData = {
     body?: never;
+    headers: {
+        /**
+         * Authorization
+         */
+        authorization: string | null;
+    };
     path?: never;
     query: {
         /**
