@@ -1,12 +1,10 @@
 import Link from "next/link";
-import SignIn from "./components/auth/sign-in";
+import { Toaster } from "@/components/ui/sonner"
 
 export default function Home() {
   return (
-    <main>
-      <Link href="/dash" className="" >
-        open dashboard
-      </Link>
-    </main>
+    <Link href="/dash" className="" >
+      open dashboard
+    </Link>
   );
 }

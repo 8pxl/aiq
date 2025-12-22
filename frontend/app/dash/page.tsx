@@ -9,9 +9,7 @@ export default function Home() {
   } = authClient.useSession();
   if (session) {
     return (
-      <>
-        <Dashboard />
-      </>
+      <Dashboard />
     )
   }
   return (
