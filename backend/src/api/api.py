@@ -31,6 +31,7 @@ app.add_middleware(
 def get_teams(
     session: Session = Depends(db.get_session), _=Depends(auth.authenticate_user)
 ):
+    print("getting ateams ts")
     return {"code": 200, "result": db.get_all_teams(session)}
 
 
@@ -75,9 +76,13 @@ def put_qualifications(
     session: Session = Depends(db.get_session),
     _=Depends(auth.authenticate_user),
 ):
-    db.update_quals(
-        session, Qualifications(team_id=db.number_to_id(session, team), status=status)
-    )
+    try:
+        db.update_quals(
+            session, Qualifications(team_id=db.number_to_id(session, team), status=status)
+        )
+        return {"code": 200}
+    except Exception as e:
+        return {"code": 400, "message": e}
 
 
 @app.get("/")
