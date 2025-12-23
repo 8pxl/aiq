@@ -1,7 +1,7 @@
 "use client"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { getjwt } from "@/lib/auth-client"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import {
   Select,
   SelectContent,
@@ -9,12 +9,79 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { InlineInput, Input } from "@/components/ui/input"
-import { getQualificationsQualificationsGet, GetQualificationsQualificationsGetData } from "@/lib/client"
 
-export function QualsInput() {
+import { toast } from "sonner"
+import { InlineInput, Input } from "@/components/ui/input"
+import { getQualificationsQualificationsGet, putQualificationsQualificationsPut, Qualification } from "@/lib/client"
+import { useSonner } from "sonner"
+
+
+const qualToStr = (q: Qualification) => {
+  switch (q) {
+    case 1:
+      return "regionals"
+    case 2:
+      return "worlds"
+    default:
+      return "none"
+  }
+}
+
+interface Qiprops {
+  refresh: number;
+  setRefresh: React.Dispatch<React.SetStateAction<number>>;
+}
+export function QualsInput({ refresh, setRefresh }: Qiprops) {
   const [team, setTeam] = useState("")
-  // const [qualification, setQualification] = 
+  const [qualification, setQualification] = useState("")
+
+  const strToQual = (s: string) => {
+    switch (s) {
+      case "regionals":
+        return 1
+      case "worlds":
+        return 2
+      default:
+        return 0
+    }
+
+  }
+
+  const submitForm = (value: SetStateAction<string>) => {
+    setQualification(value)
+    if (team === "")
+      return
+    async function put() {
+      try {
+
+        const token = await getjwt()
+        if (typeof token !== "string") {
+          console.error("invalud token!")
+          return
+        }
+        const res = await putQualificationsQualificationsPut({
+          query: {
+            status: strToQual(value as string),
+            team: team
+          },
+          headers: {
+            authorization: `Bearer ${token}`,
+          }
+        })
+        setRefresh(refresh + 1)
+
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    toast.promise(put, {
+      loading: 'updating database',
+      success: 'updating qualification succesful!',
+      error: 'error!',
+      position: 'top-center'
+
+    })
+  }
   return (
     <div className="text-5xl w-full col-span-2 flex flex-col p-2">
       <div className="text-sm text-right">
@@ -23,14 +90,21 @@ export function QualsInput() {
       <div className="flex flex-col gap-1 w-full">
         <div>
           <span>change </span>
-          <InlineInput placeholder="86868R" className="uppercase text-5xl w-fit max-w-[4em]" />
+          <InlineInput
+            placeholder="86868R"
+            value={team}
+            onChange={(e) => setTeam(e.target.value.toUpperCase())}
+            className="uppercase text-5xl w-fit max-w-[4em]" />
           <span>'s</span>
         </div>
-        <div className="ml-[25%]">
+        <div className="ml-[34%]">
           qualification status to
         </div>
-        <div className="ml-[70%]">
-          <Select>
+        <div className="ml-[77%]">
+          <Select
+            value={qualification}
+            onValueChange={submitForm}
+          >
             <SelectTrigger className="italic">
               <SelectValue placeholder="regionals" />
             </SelectTrigger>
@@ -45,7 +119,11 @@ export function QualsInput() {
     </div>
   )
 }
-export default function QualsDisplay() {
+
+interface Qdprops {
+  refresh: number
+}
+export default function QualsDisplay({ refresh }: Qdprops) {
   const [data, setData] = useState<Record<string, any>[]>([]);
   useEffect(() => {
     async function fetchData() {
@@ -60,18 +138,28 @@ export default function QualsDisplay() {
         if (!res.response.ok) {
           throw new Error(`HTTP error! status: ${res.response.status}`);
         }
-        setData(res.data);
+        let data = res.data
+
+        for (const entry of data) {
+          entry["status"] = qualToStr(entry["status"])
+        }
+        setData(data);
 
       } catch (e) {
         console.error(e)
       }
     }
-    fetchData()
-  }, [])
+    toast.promise(fetchData, {
+      loading: 'fetching data...',
+      success: 'fetching data succesful!',
+      error: 'error!',
+      position: 'top-center'
 
-  console.log(data)
+    })
+    // fetchData()
+  }, [refresh])
+
   const columns = data.length > 0 ? Object.keys(data[0]) : [];
-
   return (
     <div className="overflow-auto row-span-2 col-span-2">
       <Table>

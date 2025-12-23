@@ -9,10 +9,11 @@ from sqlmodel import (
     Relationship,
     SQLModel,
 )
-from enum import Enum
+
+from enum import IntEnum
 
 
-class Qualification(Enum):
+class Qualification(IntEnum):
     NONE = 0
     REGIONAL = 1
     WORLD = 2
