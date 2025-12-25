@@ -14,6 +14,7 @@ import { toast } from "sonner"
 import { InlineInput, Input } from "@/components/ui/input"
 import { getQualificationsQualificationsGet, putQualificationsQualificationsPut, Qualification } from "@/lib/client"
 import { useSonner } from "sonner"
+import { error } from "console"
 
 
 const qualToStr = (q: Qualification) => {
@@ -52,28 +53,31 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
     if (team === "")
       return
     async function put() {
-      try {
-
-        const token = await getjwt()
-        if (typeof token !== "string") {
-          console.error("invalud token!")
-          return
+      const token = await getjwt()
+      if (typeof token !== "string") {
+        console.error("invalud token!")
+        return
+      }
+      const res = await putQualificationsQualificationsPut({
+        query: {
+          status: strToQual(value as string),
+          team: team
+        },
+        headers: {
+          authorization: `Bearer ${token}`,
         }
-        const res = await putQualificationsQualificationsPut({
-          query: {
-            status: strToQual(value as string),
-            team: team
-          },
-          headers: {
-            authorization: `Bearer ${token}`,
-          }
-        })
-        setRefresh(refresh + 1)
+      })
+      console.log(res)
+      switch (res.response.status) {
+        case 200:
+          setRefresh(refresh + 1)
+          break;
+        case 400:
+          throw new Error(res.error.detail)
 
-      } catch (e) {
-        console.error(e)
       }
     }
+
     toast.promise(put, {
       loading: 'updating database',
       success: 'updating qualification succesful!',
@@ -83,7 +87,7 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
     })
   }
   return (
-    <div className="text-5xl w-full col-span-2 flex flex-col p-2">
+    <div className="text-4xl w-full col-span-2 flex flex-col p-2">
       <div className="text-sm text-right">
         manual qualification adjustment
       </div>
@@ -94,18 +98,20 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
             placeholder="86868R"
             value={team}
             onChange={(e) => setTeam(e.target.value.toUpperCase())}
-            className="uppercase text-5xl w-fit max-w-[4em]" />
+            className="uppercase text-4xl w-fit max-w-[4em]" />
           <span>'s</span>
         </div>
         <div className="ml-[34%]">
           qualification status to
         </div>
-        <div className="ml-[77%]">
+        <div className="flex flex-row justify-between">
+          <span>
+          </span>
           <Select
             value={qualification}
             onValueChange={submitForm}
           >
-            <SelectTrigger className="italic">
+            <SelectTrigger className="italic w-[8.5ch]">
               <SelectValue placeholder="regionals" />
             </SelectTrigger>
             <SelectContent>
