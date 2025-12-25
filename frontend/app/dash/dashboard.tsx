@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client"
 import QualsDisplay from "./quals";
 import { useState } from "react";
 import { ExtractDisplay } from "./extract";
+import InfoDisplay from "./info";
 
 function Header() {
   async function handleSignOut(e: MouseEvent<HTMLAnchorElement>) {
@@ -23,7 +24,7 @@ function Header() {
 }
 function Welcome() {
   return (
-    <div className="mt-15 text-foreground text-3xl">
+    <div className="mt-10 text-foreground text-3xl">
       Welcome!
     </div>
   )
@@ -37,7 +38,7 @@ export default function Dashboard() {
       <div className="mt-2.5 grid grid-rows-3 grid-cols-3 border-1 border-white divide-x divide-y divide-white gap-0 overflow-auto">
         <QualsDisplay refresh={refresh} />
         <ExtractDisplay />
-        <div></div>
+        <InfoDisplay />
         <QualsInput refresh={refresh} setRefresh={setRefresh} />
       </div>
     </div >
