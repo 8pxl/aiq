@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, FastAPI, Header
+from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, status
 from sqlmodel import Session, select
 
 from api import auth
@@ -80,9 +80,9 @@ def put_qualifications(
         db.update_quals(
             session, Qualifications(team_id=db.number_to_id(session, team), status=status)
         )
-        return {"code": 200}
     except Exception as e:
-        return {"code": 400, "message": e}
+        print(e)
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/")
