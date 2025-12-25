@@ -87,21 +87,21 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
     })
   }
   return (
-    <div className="text-4xl w-full col-span-2 flex flex-col p-2">
+    <div className="text-5xl w-full col-span-2 flex flex-col p-2 bg-background z-20">
       <div className="text-sm text-right">
         manual qualification adjustment
       </div>
-      <div className="flex flex-col gap-1 w-full">
+      <div className="flex flex-col gap-1 w-full whitespace-nowrap">
         <div>
           <span>change </span>
           <InlineInput
             placeholder="86868R"
             value={team}
             onChange={(e) => setTeam(e.target.value.toUpperCase())}
-            className="uppercase text-4xl w-fit max-w-[4em]" />
+            className="uppercase text-5xl w-fit max-w-[4em]" />
           <span>'s</span>
         </div>
-        <div className="ml-[34%]">
+        <div className=" text-right mr-[19%]">
           qualification status to
         </div>
         <div className="flex flex-row justify-between">
