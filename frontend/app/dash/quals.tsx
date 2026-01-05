@@ -1,96 +1,76 @@
-"use client"
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { getjwt } from "@/lib/auth-client"
-import { SetStateAction, useEffect, useState } from "react"
+"use client";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getjwt } from "@/lib/auth-client";
+import { SetStateAction, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-import { toast } from "sonner"
-import { InlineInput, Input } from "@/components/ui/input"
-import { getQualificationsQualificationsGet, putQualificationsQualificationsPut, Qualification } from "@/lib/client"
-import { useSonner } from "sonner"
-import { error } from "console"
-
-
-const qualToStr = (q: Qualification) => {
-  switch (q) {
-    case 1:
-      return "regionals"
-    case 2:
-      return "worlds"
-    default:
-      return "none"
-  }
-}
+import { toast } from "sonner";
+import { InlineInput } from "@/components/ui/input";
+import {
+  getQualificationsQualificationsGet,
+  putQualificationsQualificationsPut,
+} from "@/lib/client";
+import { qualToStr, strToQual } from "@/lib/qualification";
 
 interface Qiprops {
   refresh: number;
   setRefresh: React.Dispatch<React.SetStateAction<number>>;
 }
 export function QualsInput({ refresh, setRefresh }: Qiprops) {
-  const [team, setTeam] = useState("")
-  const [qualification, setQualification] = useState("")
-
-  const strToQual = (s: string) => {
-    switch (s) {
-      case "regionals":
-        return 1
-      case "worlds":
-        return 2
-      default:
-        return 0
-    }
-
-  }
+  const [team, setTeam] = useState("");
+  const [qualification, setQualification] = useState("");
 
   const submitForm = (value: SetStateAction<string>) => {
-    setQualification(value)
-    if (team === "")
-      return
+    setQualification(value);
+    if (team === "") return;
     async function put() {
-      const token = await getjwt()
+      const token = await getjwt();
       if (typeof token !== "string") {
-        console.error("invalud token!")
-        return
+        console.error("invalud token!");
+        return;
       }
       const res = await putQualificationsQualificationsPut({
         query: {
           status: strToQual(value as string),
-          team: team
+          team: team,
         },
         headers: {
           authorization: `Bearer ${token}`,
-        }
-      })
-      console.log(res)
+        },
+      });
+      console.log(res);
       switch (res.response.status) {
         case 200:
-          setRefresh(refresh + 1)
+          setRefresh(refresh + 1);
           break;
         case 400:
-          throw new Error(res.error.detail)
-
+          throw new Error(String(res.error?.detail ?? "Unknown error"));
       }
     }
 
     toast.promise(put, {
-      loading: 'updating database',
-      success: 'updating qualification succesful!',
-      error: 'error!',
-      position: 'top-center'
-
-    })
-  }
+      loading: "updating database",
+      success: "updating qualification succesful!",
+      error: "error!",
+      position: "top-center",
+    });
+  };
   return (
     <div className="text-5xl w-full col-span-2 flex flex-col p-2 bg-background z-20">
-      <div className="text-sm text-right">
-        manual qualification adjustment
-      </div>
+      <div className="text-sm text-right">manual qualification adjustment</div>
       <div className="flex flex-col gap-1 w-full whitespace-nowrap">
         <div>
           <span>change </span>
@@ -98,23 +78,18 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
             placeholder="86868R"
             value={team}
             onChange={(e) => setTeam(e.target.value.toUpperCase())}
-            className="uppercase text-5xl w-fit max-w-[4em]" />
-          <span>'s</span>
+            className="uppercase text-5xl w-fit max-w-[4em]"
+          />
+          <span>&apos;s</span>
         </div>
-        <div className=" text-right mr-[19%]">
-          qualification status to
-        </div>
+        <div className=" text-right mr-[19%]">qualification status to</div>
         <div className="flex flex-row justify-between">
-          <span>
-          </span>
-          <Select
-            value={qualification}
-            onValueChange={submitForm}
-          >
+          <span></span>
+          <Select value={qualification} onValueChange={submitForm}>
             <SelectTrigger className="italic w-[8.5ch]">
               <SelectValue placeholder="regionals" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="text-5xl">
               <SelectItem value="worlds">worlds</SelectItem>
               <SelectItem value="regionals">regionals</SelectItem>
               <SelectItem value="none">none</SelectItem>
@@ -123,47 +98,54 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 interface Qdprops {
-  refresh: number
+  refresh: number;
 }
+
+interface QualificationEntry {
+  number: string;
+  organization: string;
+  status: number;
+  [key: string]: string | number;
+}
+
 export default function QualsDisplay({ refresh }: Qdprops) {
-  const [data, setData] = useState<Record<string, any>[]>([]);
+  const [data, setData] = useState<QualificationEntry[]>([]);
   useEffect(() => {
     async function fetchData() {
       try {
-        const token = await getjwt()
-        if (typeof token !== "string") return
-        const res = (await getQualificationsQualificationsGet({
+        const token = await getjwt();
+        if (typeof token !== "string") return;
+        const res = await getQualificationsQualificationsGet({
           headers: {
             authorization: `Bearer ${token}`,
-          }
-        }))
+          },
+        });
         if (!res.response.ok) {
           throw new Error(`HTTP error! status: ${res.response.status}`);
         }
-        let data = res.data
+        const responseData = res.data as QualificationEntry[];
 
-        for (const entry of data) {
-          entry["status"] = qualToStr(entry["status"])
-        }
-        setData(data);
-
+        const transformedData = responseData.map((entry) => ({
+          ...entry,
+          status: qualToStr(entry.status as 0 | 1 | 2) as unknown as number,
+        }));
+        setData(transformedData);
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     }
     toast.promise(fetchData, {
-      loading: 'fetching data...',
-      success: 'fetching data succesful!',
-      error: 'error!',
-      position: 'top-center'
-
-    })
+      loading: "fetching data...",
+      success: "fetching data succesful!",
+      error: "error!",
+      position: "top-center",
+    });
     // fetchData()
-  }, [refresh])
+  }, [refresh]);
 
   const columns = data.length > 0 ? Object.keys(data[0]) : [];
   return (
@@ -182,9 +164,7 @@ export default function QualsDisplay({ refresh }: Qdprops) {
           {data.map((row, idx) => (
             <TableRow key={idx}>
               {columns.map((col) => (
-                <TableCell key={col}>
-                  {row[col]?.toString() ?? ""}
-                </TableCell>
+                <TableCell key={col}>{row[col]?.toString() ?? ""}</TableCell>
               ))}
             </TableRow>
           ))}
