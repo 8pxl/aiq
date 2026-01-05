@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Label } from "@/components/ui/label";
 import { getLeaderboardLbGet, Qualification } from "@/lib/client";
 import { qualToStr } from "@/lib/qualification";
@@ -40,6 +40,35 @@ type SortDirection = "asc" | "desc" | null;
 
 const GRADE_OPTIONS = ["High School", "Middle School"];
 
+const ALL_COLUMNS: { key: SortKey; label: string }[] = [
+  { key: "world_rank", label: "Rank" },
+  { key: "number", label: "Team" },
+  { key: "organization", label: "Organization" },
+  { key: "region", label: "Region" },
+  { key: "country", label: "Country" },
+  { key: "score", label: "Score" },
+  { key: "driver", label: "Driver" },
+  { key: "programming", label: "Programming" },
+  { key: "status", label: "Status" },
+];
+
+const STATUS_OPTIONS = [
+  { value: 0 as Qualification, label: "None" },
+  { value: 1 as Qualification, label: "Regionals" },
+  { value: 2 as Qualification, label: "Worlds" },
+];
+
+const COLUMN_OPTIONS = ALL_COLUMNS.map((col) => ({
+  value: col.key,
+  label: col.label,
+}));
+
+// Columns hidden by default
+const DEFAULT_HIDDEN_COLUMNS: SortKey[] = ["country", "status"];
+
+// Statuses excluded by default
+const DEFAULT_EXCLUDED_STATUSES: Qualification[] = [2];
+
 export default function LeaderBoard() {
   const [data, setData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,29 +76,34 @@ export default function LeaderBoard() {
   // Filter state
   const [grade, setGrade] = useState<string>("High School");
   const [region, setRegion] = useState<string>("");
-  const [excludeNone, setExcludeNone] = useState(true);
-  const [excludeRegional, setExcludeRegional] = useState(false);
-  const [excludeWorld, setExcludeWorld] = useState(false);
+  const [excludedStatuses, setExcludedStatuses] = useState<Qualification[]>(
+    DEFAULT_EXCLUDED_STATUSES,
+  );
+
+  // Column visibility state - stored as array of hidden column keys
+  const [hiddenColumns, setHiddenColumns] = useState<SortKey[]>(
+    DEFAULT_HIDDEN_COLUMNS,
+  );
 
   // Sort state
   const [sortKey, setSortKey] = useState<SortKey>("world_rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
+  const visibleColumns = useMemo(
+    () => ALL_COLUMNS.filter((col) => !hiddenColumns.includes(col.key)),
+    [hiddenColumns],
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const excludeStatuses: Qualification[] = [];
-        if (excludeNone) excludeStatuses.push(0);
-        if (excludeRegional) excludeStatuses.push(1);
-        if (excludeWorld) excludeStatuses.push(2);
-
         const res = await getLeaderboardLbGet({
           query: {
             grade,
             region: region || undefined,
             exclude_statuses:
-              excludeStatuses.length > 0 ? excludeStatuses : undefined,
+              excludedStatuses.length > 0 ? excludedStatuses : undefined,
             limit: 100,
           },
         });
@@ -94,7 +128,7 @@ export default function LeaderBoard() {
       error: "Failed to load leaderboard",
       position: "top-center",
     });
-  }, [grade, region, excludeNone, excludeRegional, excludeWorld]);
+  }, [grade, region, excludedStatuses]);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -144,17 +178,10 @@ export default function LeaderBoard() {
     return <ArrowUpDown className="ml-1 h-4 w-4 inline opacity-50" />;
   };
 
-  const columns: { key: SortKey; label: string }[] = [
-    { key: "world_rank", label: "Rank" },
-    { key: "number", label: "Team" },
-    { key: "organization", label: "Organization" },
-    { key: "region", label: "Region" },
-    { key: "country", label: "Country" },
-    { key: "score", label: "Score" },
-    { key: "driver", label: "Driver" },
-    { key: "programming", label: "Programming" },
-    { key: "status", label: "Qualification Status" },
-  ];
+  const hiddenColumnsSet = useMemo(
+    () => new Set(hiddenColumns),
+    [hiddenColumns],
+  );
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -188,41 +215,23 @@ export default function LeaderBoard() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label>Exclude Statuses</Label>
-          <div className="flex gap-4">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="exclude-none"
-                checked={excludeNone}
-                onCheckedChange={(checked) => setExcludeNone(checked === true)}
-              />
-              <Label htmlFor="exclude-none" className="cursor-pointer">
-                None
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="exclude-regional"
-                checked={excludeRegional}
-                onCheckedChange={(checked) =>
-                  setExcludeRegional(checked === true)
-                }
-              />
-              <Label htmlFor="exclude-regional" className="cursor-pointer">
-                Regional
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="exclude-world"
-                checked={excludeWorld}
-                onCheckedChange={(checked) => setExcludeWorld(checked === true)}
-              />
-              <Label htmlFor="exclude-world" className="cursor-pointer">
-                World
-              </Label>
-            </div>
-          </div>
+          <Label>Exclude Teams Qualified For:</Label>
+          <MultiSelect
+            options={STATUS_OPTIONS}
+            selected={excludedStatuses}
+            onChange={setExcludedStatuses}
+            placeholder="None excluded"
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label>Hide Columns</Label>
+          <MultiSelect
+            options={COLUMN_OPTIONS}
+            selected={hiddenColumns}
+            onChange={setHiddenColumns}
+            placeholder="None hidden"
+          />
         </div>
       </div>
 
@@ -231,7 +240,7 @@ export default function LeaderBoard() {
         <Table>
           <TableHeader>
             <TableRow>
-              {columns.map((col) => (
+              {visibleColumns.map((col) => (
                 <TableHead
                   key={col.key}
                   className="cursor-pointer select-none hover:bg-muted/50"
@@ -247,7 +256,7 @@ export default function LeaderBoard() {
             {loading ? (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={visibleColumns.length}
                   className="text-center py-8"
                 >
                   Loading...
@@ -256,7 +265,7 @@ export default function LeaderBoard() {
             ) : sortedData.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={visibleColumns.length}
                   className="text-center py-8"
                 >
                   No teams found
@@ -265,17 +274,35 @@ export default function LeaderBoard() {
             ) : (
               sortedData.map((row, idx) => (
                 <TableRow key={`${row.number}-${idx}`}>
-                  <TableCell>{row.world_rank}</TableCell>
-                  <TableCell className="font-medium">{row.number}</TableCell>
-                  <TableCell className="max-w-72 overflow-clip">
-                    {row.organization}
-                  </TableCell>
-                  <TableCell>{row.region}</TableCell>
-                  <TableCell>{row.country}</TableCell>
-                  <TableCell>{row.score}</TableCell>
-                  <TableCell>{row.driver}</TableCell>
-                  <TableCell>{row.programming}</TableCell>
-                  <TableCell>{qualToStr(row.status)}</TableCell>
+                  {!hiddenColumnsSet.has("world_rank") && (
+                    <TableCell>{row.world_rank}</TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("number") && (
+                    <TableCell className="font-medium">{row.number}</TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("organization") && (
+                    <TableCell className="max-w-72 overflow-clip">
+                      {row.organization}
+                    </TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("region") && (
+                    <TableCell>{row.region}</TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("country") && (
+                    <TableCell>{row.country}</TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("score") && (
+                    <TableCell>{row.score}</TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("driver") && (
+                    <TableCell>{row.driver}</TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("programming") && (
+                    <TableCell>{row.programming}</TableCell>
+                  )}
+                  {!hiddenColumnsSet.has("status") && (
+                    <TableCell>{qualToStr(row.status)}</TableCell>
+                  )}
                 </TableRow>
               ))
             )}
