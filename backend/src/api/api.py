@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Query, status
+from sqlalchemy.orm import query
 from sqlmodel import Session, select
 from typing import Annotated
 
@@ -45,6 +46,12 @@ def get_teams(
 ):
     print("getting ateams ts")
     return {"code": 200, "result": db.get_all_teams(session)}
+
+@app.get("/regions")
+def get_regions(session: Session = Depends(db.get_session)):
+    query = select(Teams.region).distinct().order_by(Teams.region)
+    rows = session.exec(query).all()
+    return rows
 
 
 @app.get("/lb")

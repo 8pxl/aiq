@@ -66,6 +66,20 @@ export type GetTeamsTeamsGetResponses = {
     200: unknown;
 };
 
+export type GetRegionsRegionsGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/regions';
+};
+
+export type GetRegionsRegionsGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type GetLeaderboardLbGetData = {
     body?: never;
     path?: never;

@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetLeaderboardLbGetData, GetLeaderboardLbGetErrors, GetLeaderboardLbGetResponses, GetQualificationsQualificationsGetData, GetQualificationsQualificationsGetErrors, GetQualificationsQualificationsGetResponses, GetTeamsTeamsGetData, GetTeamsTeamsGetErrors, GetTeamsTeamsGetResponses, PutQualificationsQualificationsPutData, PutQualificationsQualificationsPutErrors, PutQualificationsQualificationsPutResponses, RootGetData, RootGetResponses } from './types.gen';
+import type { GetLeaderboardLbGetData, GetLeaderboardLbGetErrors, GetLeaderboardLbGetResponses, GetQualificationsQualificationsGetData, GetQualificationsQualificationsGetErrors, GetQualificationsQualificationsGetResponses, GetRegionsRegionsGetData, GetRegionsRegionsGetResponses, GetTeamsTeamsGetData, GetTeamsTeamsGetErrors, GetTeamsTeamsGetResponses, PutQualificationsQualificationsPutData, PutQualificationsQualificationsPutErrors, PutQualificationsQualificationsPutResponses, RootGetData, RootGetResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -22,6 +22,11 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  * Get Teams
  */
 export const getTeamsTeamsGet = <ThrowOnError extends boolean = false>(options: Options<GetTeamsTeamsGetData, ThrowOnError>) => (options.client ?? client).get<GetTeamsTeamsGetResponses, GetTeamsTeamsGetErrors, ThrowOnError>({ url: '/teams', ...options });
+
+/**
+ * Get Regions
+ */
+export const getRegionsRegionsGet = <ThrowOnError extends boolean = false>(options?: Options<GetRegionsRegionsGetData, ThrowOnError>) => (options?.client ?? client).get<GetRegionsRegionsGetResponses, unknown, ThrowOnError>({ url: '/regions', ...options });
 
 /**
  * Get Leaderboard
