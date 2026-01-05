@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, status
+from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Query, status
 from sqlmodel import Session, select
+from typing import Annotated
 
 from api import auth
 import db
@@ -7,6 +8,17 @@ from tables import Qualification, Qualifications, Teams
 
 from pydantic import BaseModel
 
+
+class LeaderboardEntry(BaseModel):
+    number: str
+    status: Qualification
+    organization: str
+    country: str
+    region: str
+    world_rank: int
+    score: int
+    driver: int
+    programming: int
 
 class TeamQualificationOut(BaseModel):
     number: str
@@ -37,24 +49,64 @@ def get_teams(
 
 @app.get("/lb")
 def get_leaderboard(
-    ms: bool = False,
-    region: str | None = None,
+    grade: str = "High School",
+    region: str | None = "California - Region 4",
+    exclude_statuses: Annotated[list[Qualification], Query()] = [Qualification.NONE],
+    limit: int = 20,
     session: Session = Depends(db.get_session),
 ):
-    query = select(Teams)
-    if ms:
-        query = query.where(Teams.grade == "Middle School")
-    return {"code": 1000, "message": session.exec(query)}
+    query = (
+        select(
+            Teams.number,
+            Qualifications.status,
+            Teams.organization,
+            Teams.country,
+            Teams.region,
+            Teams.world_rank,
+            Teams.score,
+            Teams.driver,
+            Teams.programming,
+        )
+        .join(Qualifications)
+        .where(Teams.grade == grade)
+        .order_by(Teams.world_rank)
+        .limit(limit)
+    )
+
+    for excluded_status in exclude_statuses:
+        query = query.where(Qualifications.status != excluded_status)
+    
+    if region is not None:
+        query = query.where(Teams.region == region)
+
+    rows = session.exec(query).all()
+
+    result = [
+        LeaderboardEntry(
+            number=number,
+            status=qual_status, 
+            organization=organization,
+            country=country,
+            region=reg,
+            world_rank=world_rank,
+            score=score,
+            driver=driver,
+            programming=programming,
+        )
+        for number, qual_status, organization, country, reg, world_rank, score, driver, programming in rows
+    ]
+
+    return {"code": 200, "result": result}
 
 
 @app.get("/qualifications")
 def get_qualifications(
     session: Session = Depends(db.get_session), _=Depends(auth.authenticate_user)
 ):
-    stmt = select(  # pyright: ignore[reportCallIssue, reportUnknownMemberType]
+    stmt = select(
         Teams.number,
         Teams.organization,
-        Qualifications.status,  # pyright: ignore[reportArgumentType]
+        Qualifications.status,
     ).join(Qualifications)
 
     rows = session.exec(stmt).all()
@@ -63,7 +115,7 @@ def get_qualifications(
         TeamQualificationOut(
             number=number,
             organization=organization,
-            status=status,
+            status=status,  # pyright: ignore[reportArgumentType]
         )
         for number, organization, status in rows
     ]

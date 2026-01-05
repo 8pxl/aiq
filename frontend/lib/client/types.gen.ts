@@ -71,13 +71,21 @@ export type GetLeaderboardLbGetData = {
     path?: never;
     query?: {
         /**
-         * Ms
+         * Grade
          */
-        ms?: boolean;
+        grade?: string;
         /**
          * Region
          */
         region?: string | null;
+        /**
+         * Exclude Statuses
+         */
+        exclude_statuses?: Array<Qualification>;
+        /**
+         * Limit
+         */
+        limit?: number;
     };
     url: '/lb';
 };
