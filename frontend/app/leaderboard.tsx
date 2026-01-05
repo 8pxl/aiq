@@ -18,6 +18,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { getLeaderboardLbGet, Qualification } from "@/lib/client";
+import { qualToStr } from "@/lib/qualification";
 import { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
@@ -39,12 +40,6 @@ type SortDirection = "asc" | "desc" | null;
 
 const GRADE_OPTIONS = ["High School", "Middle School"];
 
-const QUALIFICATION_LABELS: Record<Qualification, string> = {
-  0: "None",
-  1: "Regional",
-  2: "World",
-};
-
 export default function LeaderBoard() {
   const [data, setData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,10 +54,6 @@ export default function LeaderBoard() {
   // Sort state
   const [sortKey, setSortKey] = useState<SortKey>("world_rank");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
-
-  const qualToStr = (q: Qualification): string => {
-    return QUALIFICATION_LABELS[q] || "None";
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -162,7 +153,7 @@ export default function LeaderBoard() {
     { key: "score", label: "Score" },
     { key: "driver", label: "Driver" },
     { key: "programming", label: "Programming" },
-    { key: "status", label: "Status" },
+    { key: "status", label: "Qualification Status" },
   ];
 
   return (
@@ -236,7 +227,7 @@ export default function LeaderBoard() {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto rounded-md border">
+      <div className="w-full overflow-auto rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -276,25 +267,15 @@ export default function LeaderBoard() {
                 <TableRow key={`${row.number}-${idx}`}>
                   <TableCell>{row.world_rank}</TableCell>
                   <TableCell className="font-medium">{row.number}</TableCell>
-                  <TableCell>{row.organization}</TableCell>
+                  <TableCell className="max-w-72 overflow-clip">
+                    {row.organization}
+                  </TableCell>
                   <TableCell>{row.region}</TableCell>
                   <TableCell>{row.country}</TableCell>
                   <TableCell>{row.score}</TableCell>
                   <TableCell>{row.driver}</TableCell>
                   <TableCell>{row.programming}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        row.status === 2
-                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                          : row.status === 1
-                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                            : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
-                      }`}
-                    >
-                      {qualToStr(row.status)}
-                    </span>
-                  </TableCell>
+                  <TableCell>{qualToStr(row.status)}</TableCell>
                 </TableRow>
               ))
             )}
