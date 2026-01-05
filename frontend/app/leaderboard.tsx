@@ -22,6 +22,7 @@ import { qualToStr } from "@/lib/qualification";
 import { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ComboBox } from "@/components/ui/combobox";
 
 interface LeaderboardEntry {
   number: string;
@@ -69,7 +70,7 @@ const DEFAULT_HIDDEN_COLUMNS: SortKey[] = ["country", "status"];
 // Statuses excluded by default
 const DEFAULT_EXCLUDED_STATUSES: Qualification[] = [2];
 
-export default function LeaderBoard() {
+export default function LeaderBoard({ regions }: { regions: Array<string> }) {
   const [data, setData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -101,7 +102,7 @@ export default function LeaderBoard() {
         const res = await getLeaderboardLbGet({
           query: {
             grade,
-            region: region || undefined,
+            region: region == "All" ? undefined : region,
             exclude_statuses:
               excludedStatuses.length > 0 ? excludedStatuses : undefined,
             limit: 100,
@@ -190,7 +191,7 @@ export default function LeaderBoard() {
         <div className="flex flex-col gap-2">
           <Label>Grade</Label>
           <Select value={grade} onValueChange={setGrade}>
-            <SelectTrigger>
+            <SelectTrigger className="text-sm">
               <SelectValue placeholder="Select grade" />
             </SelectTrigger>
             <SelectContent>
@@ -205,13 +206,20 @@ export default function LeaderBoard() {
 
         <div className="flex flex-col gap-2">
           <Label>Region</Label>
-          <input
+          <ComboBox
+            className="px-3 py-2 text-sm"
+            arr={regions}
+            text="region"
+            onValueChange={(e) => setRegion(e)}
+          />
+
+          {/*<input
             type="text"
             value={region}
             onChange={(e) => setRegion(e.target.value)}
             placeholder="e.g. Colorado"
             className="border rounded-md px-3 py-2 bg-transparent"
-          />
+          />*/}
         </div>
 
         <div className="flex flex-col gap-2">
