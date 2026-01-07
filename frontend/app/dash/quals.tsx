@@ -40,7 +40,6 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
       const token = await getjwt();
       if (typeof token !== "string") {
         console.error("invalud token!");
-        return;
       }
       const res = await putQualificationsQualificationsPut({
         query: {
@@ -51,7 +50,6 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
           authorization: `Bearer ${token}`,
         },
       });
-      console.log(res);
       switch (res.response.status) {
         case 200:
           setRefresh(refresh + 1);
@@ -64,7 +62,7 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
     toast.promise(put, {
       loading: "updating database",
       success: "updating qualification succesful!",
-      error: "error!",
+      error: "error updating qualification! make sure you're logged in",
       position: "top-center",
     });
   };
@@ -116,17 +114,9 @@ export default function QualsDisplay({ refresh }: Qdprops) {
   const [data, setData] = useState<QualificationEntry[]>([]);
   useEffect(() => {
     async function fetchData() {
-      const token = await getjwt();
-      if (typeof token !== "string") {
-        throw new Error("bad token!");
-      }
-      const res = await getQualificationsQualificationsGet({
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(res)
+      const res = await getQualificationsQualificationsGet({});
       if (!res.response.ok) {
+        console.error(`HTTP error! status: ${res.response.status}`)
         throw new Error(`HTTP error! status: ${res.response.status}`);
       }
       const responseData = res.data as QualificationEntry[];
@@ -140,7 +130,7 @@ export default function QualsDisplay({ refresh }: Qdprops) {
     toast.promise(fetchData, {
       loading: "fetching data...",
       success: "fetching data succesful!",
-      error: "error fetching data! make sure you are logged in",
+      error: "error fetching data!",
       position: "top-center",
     });
     // fetchData()
