@@ -1,7 +1,14 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,11 +17,13 @@ import { Loader2, Key } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [rememberMe, setRememberMe] = useState(false);
   // const [visible, setVisible] = useState(true);
 
@@ -28,7 +37,7 @@ export default function SignIn() {
         <CardHeader>
           <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
           <CardDescription className="text-xs md:text-sm">
-            enter your email to sign in (devs only)
+            enter your email to sign in (dev only)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -50,7 +59,6 @@ export default function SignIn() {
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-
               </div>
 
               <Input
@@ -63,7 +71,6 @@ export default function SignIn() {
               />
             </div>
 
-
             <Button
               type="submit"
               className="w-full"
@@ -72,7 +79,7 @@ export default function SignIn() {
                 await signIn.email(
                   {
                     email,
-                    password
+                    password,
                   },
                   {
                     onRequest: (ctx) => {
@@ -80,6 +87,7 @@ export default function SignIn() {
                     },
                     onResponse: (ctx) => {
                       if (ctx.response.status === 200) {
+                        router.replace("/dash")
                       }
                       setLoading(false);
                     },
@@ -93,14 +101,9 @@ export default function SignIn() {
                 <p> Login</p>
               )}
             </Button>
-
-
-
-
           </div>
         </CardContent>
-
       </Card>
-    </div >
+    </div>
   );
 }
