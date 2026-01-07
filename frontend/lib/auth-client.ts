@@ -22,7 +22,6 @@ export async function getjwt() {
     return jwtToken
   }
   if (error) {
-    console.error(error)
     return error
   }
 }
