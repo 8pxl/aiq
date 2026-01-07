@@ -46,7 +46,10 @@ export interface ComboBoxClassNames {
 export interface ComboBoxProps {
   arr: Array<string>;
   text: string;
+  /** Controlled value */
   value?: string;
+  /** Default value for uncontrolled mode */
+  defaultValue?: string;
   onValueChange?: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -58,6 +61,7 @@ export function ComboBox({
   arr,
   text,
   value: controlledValue,
+  defaultValue = "",
   onValueChange,
   placeholder,
   disabled = false,
@@ -65,7 +69,7 @@ export function ComboBox({
   classNames = {},
 }: ComboBoxProps) {
   const [open, setOpen] = React.useState(false);
-  const [internalValue, setInternalValue] = React.useState("");
+  const [internalValue, setInternalValue] = React.useState(defaultValue);
 
   // Support both controlled and uncontrolled modes
   const isControlled = controlledValue !== undefined;
