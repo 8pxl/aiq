@@ -116,32 +116,31 @@ export default function QualsDisplay({ refresh }: Qdprops) {
   const [data, setData] = useState<QualificationEntry[]>([]);
   useEffect(() => {
     async function fetchData() {
-      try {
-        const token = await getjwt();
-        if (typeof token !== "string") return;
-        const res = await getQualificationsQualificationsGet({
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.response.ok) {
-          throw new Error(`HTTP error! status: ${res.response.status}`);
-        }
-        const responseData = res.data as QualificationEntry[];
-
-        const transformedData = responseData.map((entry) => ({
-          ...entry,
-          status: qualToStr(entry.status as 0 | 1 | 2) as unknown as number,
-        }));
-        setData(transformedData);
-      } catch (e) {
-        console.error(e);
+      const token = await getjwt();
+      if (typeof token !== "string") {
+        throw new Error("bad token!");
       }
+      const res = await getQualificationsQualificationsGet({
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res)
+      if (!res.response.ok) {
+        throw new Error(`HTTP error! status: ${res.response.status}`);
+      }
+      const responseData = res.data as QualificationEntry[];
+
+      const transformedData = responseData.map((entry) => ({
+        ...entry,
+        status: qualToStr(entry.status as 0 | 1 | 2) as unknown as number,
+      }));
+      setData(transformedData);
     }
     toast.promise(fetchData, {
       loading: "fetching data...",
       success: "fetching data succesful!",
-      error: "error!",
+      error: "error fetching data! make sure you are logged in",
       position: "top-center",
     });
     // fetchData()
