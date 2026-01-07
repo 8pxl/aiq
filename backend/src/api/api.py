@@ -57,7 +57,7 @@ def get_regions(session: Session = Depends(db.get_session)):
 @app.get("/lb")
 def get_leaderboard(
     grade: str = "High School",
-    region: str | None = "California - Region 4",
+    region: str | None = None,
     exclude_statuses: Annotated[list[Qualification], Query()] = [Qualification.NONE],
     limit: int = 20,
     session: Session = Depends(db.get_session),
