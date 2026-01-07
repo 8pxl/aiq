@@ -76,7 +76,7 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
 
   // Filter state
   const [grade, setGrade] = useState<string>("High School");
-  const [region, setRegion] = useState<string>("");
+  const [region, setRegion] = useState<string>("All");
   const [excludedStatuses, setExcludedStatuses] = useState<Qualification[]>(
     DEFAULT_EXCLUDED_STATUSES,
   );
@@ -207,9 +207,10 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
         <div className="flex flex-col gap-2">
           <Label>Region</Label>
           <ComboBox
-            className="px-3 py-2 text-sm"
+            className="px-3 py-2 text-sm w-48"
             arr={regions}
             text="region"
+            defaultValue="All"
             onValueChange={(e) => setRegion(e)}
           />
 
@@ -222,8 +223,8 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
           />*/}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <Label>Exclude Teams Qualified For:</Label>
+        <div className="flex flex-col gap-2 w-52">
+          <Label>Exclude Teams Qualified For</Label>
           <MultiSelect
             options={STATUS_OPTIONS}
             selected={excludedStatuses}
