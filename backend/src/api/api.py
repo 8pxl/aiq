@@ -108,8 +108,7 @@ def get_leaderboard(
 
 @app.get("/qualifications")
 def get_qualifications(
-    session: Session = Depends(db.get_session), _=Depends(auth.authenticate_user)
-):
+        session: Session = Depends(db.get_session)):
     stmt = select(
         Teams.number,
         Teams.organization,
