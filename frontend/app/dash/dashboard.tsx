@@ -14,19 +14,37 @@ function Header() {
     window.location.href = "/";
 
   }
+  const {
+    data: session,
+  } = authClient.useSession();
+  var rightContent;
+  if (session) {
+    rightContent = (
+      <Link href="/" className="text-nowrap" onClick={handleSignOut}>
+        sign out
+      </Link>
+    )
+  }
+  else {
+    rightContent = (
+      <Link href="/signin" className="text-nowrap">
+        sign in
+      </Link>
+    )
+  }
   return (
-    <div className="w-screen flex justify-between font-borel text-xl">
-      <Link href="/" className="" onClick={handleSignOut}>
+    <div className="w-full flex flex-row justify-between">
+      <Link href="/" className="font-borel text-xl" >
         amiqualled?
       </Link>
+      {rightContent}
     </div>
   )
 }
 function Welcome() {
-  return (
-    <div className="mt-10 text-foreground text-3xl">
-      Welcome!
-    </div>
+  return (<div className="mt-10 text-foreground text-3xl">
+    Welcome!
+  </div>
   )
 }
 export default function Dashboard() {
