@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
 import LeaderBoard from "./leaderboard";
 import { getRegionsRegionsGet } from "@/lib/client";
+import Header from "./header";
 
 export default async function Home() {
   const fetchData = async () => {
@@ -21,11 +22,9 @@ export default async function Home() {
   regions.unshift("All");
 
   return (
-    <>
-      <Link href="/dash" className="">
-        open dashboard
-      </Link>
+    <div className="m-3">
+      <Header />
       <LeaderBoard regions={regions} />
-    </>
+    </div>
   );
 }
