@@ -70,7 +70,6 @@ export function MultiSelect<T extends string | number = string>({
           "border-input flex w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 shadow-xs transition-colors",
           "hover:bg-muted/50",
           "disabled:cursor-not-allowed disabled:opacity-50",
-          open && "ring-2 ring-ring ring-offset-2",
         )}
       >
         <span
