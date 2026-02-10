@@ -1,5 +1,7 @@
 from datetime import datetime
 import os
+import sys
+import getpass
 from typing import Any
 from sqlalchemy import Engine
 from sqlmodel import SQLModel, Session, create_engine, select
@@ -7,9 +9,24 @@ from tables import Qualification, Qualifications, Teams, Metadata, User
 from dotenv import load_dotenv
 
 if not load_dotenv():
-    print("loading .env failed")
+    print("Warning: .env file not found or failed to load")
 
-mysqlurl = f"mysql+pymysql://root:{os.environ['MYSQL_PASSWORD']}@127.0.0.1:3306/test"
+# Get MySQL password - from environment or stdin
+mysql_password = os.environ.get("MYSQL_PASSWORD")
+if not mysql_password:
+    print("\nMYSQL_PASSWORD not found in environment.")
+    print("Please enter your MySQL password:")
+    try:
+        # Use getpass for password input (hides input)
+        mysql_password = getpass.getpass("> ")
+        if not mysql_password:
+            print("Error: MySQL password cannot be empty")
+            sys.exit(1)
+    except (EOFError, KeyboardInterrupt):
+        print("\nError: Password input cancelled")
+        sys.exit(1)
+
+mysqlurl = f"mysql+pymysql://root:{mysql_password}@127.0.0.1:3306/test"
 engine = create_engine(mysqlurl, echo=False)
 SQLModel.metadata.create_all(engine)
 

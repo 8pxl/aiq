@@ -7,22 +7,35 @@ from robotevents import RobotEvents
 from tables import Qualification, Teams, Qualifications
 from progress_tracker import ProgressTracker
 import os
+import sys
 from fastapi import FastAPI
 from api.api import *
 from dotenv import load_dotenv
 
+# Load .env file
 if not load_dotenv():
-    print("loading .env failed")
+    print("Warning: .env file not found or failed to load")
 
+# Get RobotEvents token - from environment or stdin
+robotevents_token = os.environ.get("ROBOTEVENTS_AUTH_TOKEN")
+if not robotevents_token:
+    print("\nROBOTEVENTS_AUTH_TOKEN not found in environment.")
+    print("Please enter your RobotEvents API token:")
+    try:
+        robotevents_token = input("> ").strip()
+        if not robotevents_token:
+            print("Error: Token cannot be empty")
+            sys.exit(1)
+    except (EOFError, KeyboardInterrupt):
+        print("\nError: Token input cancelled")
+        sys.exit(1)
 
 # print("fast step")
 # Create progress tracker for the long-running qualification creation
 progress_tracker = ProgressTracker(log_file="qualification_progress.log")
 
 # Initialize RobotEvents with progress tracker for API request logging
-robotevents = RobotEvents(
-    os.environ["ROBOTEVENTS_AUTH_TOKEN"], progress_tracker=progress_tracker
-)
+robotevents = RobotEvents(robotevents_token, progress_tracker=progress_tracker)
 SQLModel.metadata.create_all(db.engine)
 
 
