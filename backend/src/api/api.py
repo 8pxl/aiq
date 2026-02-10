@@ -126,6 +126,17 @@ def get_qualifications(
         for number, organization, status in rows
     ]
 
+@app.get("/lastSlow")
+def get_last_slow(
+    session: Session = Depends(db.get_session),
+    _ = Depends(auth.authenticate_user)):
+    return db.get_last_slow_update(session)
+
+# @app.post("/update")
+# def trigger_update(
+#     session: Session = Depends(db.get_session),
+#         _ = Depends(auth.authenticate_user)):
+#     pass
 
 @app.put("/qualifications")
 def put_qualifications(

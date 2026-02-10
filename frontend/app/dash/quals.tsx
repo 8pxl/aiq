@@ -63,7 +63,7 @@ export function QualsInput({ refresh, setRefresh }: Qiprops) {
       loading: "updating database",
       success: "updating qualification succesful!",
       error: "error updating qualification! make sure you're logged in",
-      position: "top-center",
+      position: "bottom-center",
     });
   };
   return (
@@ -128,10 +128,10 @@ export default function QualsDisplay({ refresh }: Qdprops) {
       setData(transformedData);
     }
     toast.promise(fetchData, {
-      loading: "fetching data...",
-      success: "fetching data succesful!",
+      loading: "fetching quals data...",
+      success: "quals data loaded!",
       error: "error fetching data!",
-      position: "top-center",
+      position: "bottom-center",
     });
     // fetchData()
   }, [refresh]);

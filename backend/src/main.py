@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import time
 from sqlalchemy import Engine
 from sqlmodel import SQLModel, Session, create_engine
 import db
@@ -16,6 +17,18 @@ if not load_dotenv():
 # print("fast step")
 robotevents = RobotEvents(os.environ["ROBOTEVENTS_AUTH_TOKEN"])
 SQLModel.metadata.create_all(db.engine)
+# with Session(db.engine) as session:
+    # while True:
+    #     print("hi")
+    #     time.sleep(100)
+        # continue
+        # timeElapsed = datetime.now() - db.get_last_slow_update(session)
+        # if timeElapsed > timedelta(days=2):
+        #     all_teams = db.get_all_teams(session)
+        #     qualifications = robotevents.create_qualifications_full(all_teams)
+        #     for q in qualifications:
+        #         db.upsert_quals(session, q)
+        #     db.set_update_time(session)
 
 # db.set_update_time(engine)
 # teams = robotevents.parse_skills(True)
@@ -25,21 +38,21 @@ SQLModel.metadata.create_all(db.engine)
 
 # print(robotevents.create_qualifications_sig())
 
-# qualifications = robotevents.create_qualifications_sig()
-# if qualifications:
-#     for q in qualifications:
-#         db.upsert_quals(engine, q)
+qualifications = robotevents.create_qualifications_sig()
+if qualifications:
+    for q in qualifications:
+        db.upsert_quals(engine, q)
 
 #
 # print(datetime.now()-db.get_last_slow_update(engine) > timedelta(seconds=60))
 # 169926
 # 186744
 
-# all_teams = db.get_all_teams(engine)
-# qualifications  = robotevents.create_qualifications_full(all_teams)
-# print("updating qualifications!")
-# for q in qualifications:
-#     db.upsert_quals(engine, q)
+all_teams = db.get_all_teams(engine)
+qualifications  = robotevents.create_qualifications_full(all_teams)
+print("updating qualifications!")
+for q in qualifications:
+    db.upsert_quals(engine, q)
 
 # manual_qualifications = ["15442A", "2054V", "16689A", "6008G", "884A", "3004A"]
 #

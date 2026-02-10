@@ -1,4 +1,16 @@
+import { getjwt } from "@/lib/auth-client";
+import { useEffect } from "react";
 export default function InfoDisplay() {
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = await getjwt()
+      if (typeof token !== "string") {
+        console.error("invalud token!");
+      }
+    }
+  }
+    , []
+  )
   return (
     <div className="flex items-center">
       <div className="flex flex-col text-2xl lg:text-4xl p-2 w-full text-right duration-500">

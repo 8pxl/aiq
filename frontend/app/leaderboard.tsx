@@ -124,10 +124,10 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
     };
 
     toast.promise(fetchData, {
-      loading: "Fetching leaderboard data...",
-      success: "Leaderboard loaded!",
-      error: "Failed to load leaderboard",
-      position: "top-center",
+      loading: "fetching leaderboard data...",
+      success: "leaderboard loaded!",
+      error: "failed to load leaderboard",
+      position: "bottom-center",
     });
   }, [grade, region, excludedStatuses]);
 

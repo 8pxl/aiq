@@ -10,7 +10,7 @@ if not load_dotenv():
     print("loading .env failed")
 
 mysqlurl = f"mysql+pymysql://root:{os.environ['MYSQL_PASSWORD']}@127.0.0.1:3306/test"
-engine = create_engine(mysqlurl, echo=True)
+engine = create_engine(mysqlurl, echo=False)
 SQLModel.metadata.create_all(engine)
 
 

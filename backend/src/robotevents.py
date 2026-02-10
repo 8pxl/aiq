@@ -151,10 +151,10 @@ class RobotEvents:
         qualifications: list[Qualifications] = []
         now = time.time()
         for team in teams:
-            print(time.time() - now)
+            # print(time.time() - now)
             now = time.time()
-            if len(qualifications) > 1000:
-                break
+            # if len(qualifications) > 1000:
+            #     break
             if worlds_teams and team in worlds_teams:
                 q = Qualification.WORLD
             else:
