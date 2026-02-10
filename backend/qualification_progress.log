@@ -1,0 +1,296 @@
+[2026-02-10 11:46:05] Failed to load progress file, starting fresh: Expecting value: line 1 column 1 (char 0)
+[2026-02-10 11:46:11] Progress: 10/9195 (0.1%) | Current team_id: 366 | Status: NONE | Elapsed: 6s | Avg: 0.64s/team | Est. remaining: 5849s (97.5m)
+[2026-02-10 11:46:11] Database committed at 10 teams
+[2026-02-10 11:46:24] Progress: 20/9195 (0.2%) | Current team_id: 831 | Status: NONE | Elapsed: 20s | Avg: 0.99s/team | Est. remaining: 9059s (151.0m)
+[2026-02-10 11:46:24] Database committed at 20 teams
+[2026-02-10 11:46:31] Progress: 30/9195 (0.3%) | Current team_id: 1841 | Status: NONE | Elapsed: 26s | Avg: 0.87s/team | Est. remaining: 7973s (132.9m)
+[2026-02-10 11:46:31] Database committed at 30 teams
+[2026-02-10 11:46:41] Progress: 40/9195 (0.4%) | Current team_id: 2556 | Status: REGIONAL | Elapsed: 36s | Avg: 0.90s/team | Est. remaining: 8226s (137.1m)
+[2026-02-10 11:46:41] Database committed at 40 teams
+[2026-02-10 11:46:43] Progress: 50/9195 (0.5%) | Current team_id: 3456 | Status: REGIONAL | Elapsed: 38s | Avg: 0.77s/team | Est. remaining: 7014s (116.9m)
+[2026-02-10 11:46:43] Database committed at 50 teams
+[2026-02-10 11:47:00] Progress: 60/9195 (0.7%) | Current team_id: 4126 | Status: NONE | Elapsed: 56s | Avg: 0.93s/team | Est. remaining: 8472s (141.2m)
+[2026-02-10 11:47:00] Database committed at 60 teams
+[2026-02-10 11:47:12] Progress: 70/9195 (0.8%) | Current team_id: 4746 | Status: NONE | Elapsed: 67s | Avg: 0.96s/team | Est. remaining: 8720s (145.3m)
+[2026-02-10 11:47:12] Database committed at 70 teams
+[2026-02-10 11:47:14] INTERRUPTED: Progress committed to database. Run again to resume.
+[2026-02-10 11:50:40] RESUMING from index 70 (team_id: 4746). Already processed: 70/9195 teams
+[2026-02-10 11:50:50] Progress: 80/9195 (0.9%) | Current team_id: 5976 | Status: NONE | Elapsed: 9s | Avg: 0.12s/team | Est. remaining: 1072s (17.9m)
+[2026-02-10 11:50:50] Database committed at 10 teams
+[2026-02-10 11:51:03] Progress: 90/9195 (1.0%) | Current team_id: 7166 | Status: NONE | Elapsed: 23s | Avg: 0.25s/team | Est. remaining: 2294s (38.2m)
+[2026-02-10 11:51:03] Database committed at 20 teams
+[2026-02-10 11:51:16] Progress: 100/9195 (1.1%) | Current team_id: 8329 | Status: NONE | Elapsed: 36s | Avg: 0.36s/team | Est. remaining: 3271s (54.5m)
+[2026-02-10 11:51:16] Database committed at 30 teams
+[2026-02-10 11:51:36] Progress: 110/9195 (1.2%) | Current team_id: 8791 | Status: NONE | Elapsed: 56s | Avg: 0.51s/team | Est. remaining: 4618s (77.0m)
+[2026-02-10 11:51:36] Database committed at 40 teams
+[2026-02-10 11:51:49] Progress: 120/9195 (1.3%) | Current team_id: 9880 | Status: NONE | Elapsed: 69s | Avg: 0.58s/team | Est. remaining: 5227s (87.1m)
+[2026-02-10 11:51:49] Database committed at 50 teams
+[2026-02-10 11:52:03] Progress: 130/9195 (1.4%) | Current team_id: 12742 | Status: NONE | Elapsed: 83s | Avg: 0.64s/team | Est. remaining: 5793s (96.6m)
+[2026-02-10 11:52:03] Database committed at 60 teams
+[2026-02-10 11:52:13] Progress: 140/9195 (1.5%) | Current team_id: 13849 | Status: NONE | Elapsed: 93s | Avg: 0.66s/team | Est. remaining: 6005s (100.1m)
+[2026-02-10 11:52:13] Database committed at 70 teams
+[2026-02-10 11:52:23] Progress: 150/9195 (1.6%) | Current team_id: 14662 | Status: NONE | Elapsed: 103s | Avg: 0.68s/team | Est. remaining: 6185s (103.1m)
+[2026-02-10 11:52:23] Database committed at 80 teams
+[2026-02-10 11:52:33] Progress: 160/9195 (1.7%) | Current team_id: 15931 | Status: NONE | Elapsed: 112s | Avg: 0.70s/team | Est. remaining: 6346s (105.8m)
+[2026-02-10 11:52:33] Database committed at 90 teams
+[2026-02-10 11:52:52] Progress: 170/9195 (1.8%) | Current team_id: 17818 | Status: NONE | Elapsed: 132s | Avg: 0.78s/team | Est. remaining: 7002s (116.7m)
+[2026-02-10 11:52:52] Database committed at 100 teams
+[2026-02-10 11:53:06] Progress: 180/9195 (2.0%) | Current team_id: 18916 | Status: NONE | Elapsed: 146s | Avg: 0.81s/team | Est. remaining: 7328s (122.1m)
+[2026-02-10 11:53:06] Database committed at 110 teams
+[2026-02-10 11:53:22] Progress: 190/9195 (2.1%) | Current team_id: 19918 | Status: NONE | Elapsed: 162s | Avg: 0.85s/team | Est. remaining: 7691s (128.2m)
+[2026-02-10 11:53:22] Database committed at 120 teams
+[2026-02-10 11:53:39] Progress: 200/9195 (2.2%) | Current team_id: 21814 | Status: NONE | Elapsed: 179s | Avg: 0.90s/team | Est. remaining: 8063s (134.4m)
+[2026-02-10 11:53:39] Database committed at 130 teams
+[2026-02-10 11:54:00] Progress: 210/9195 (2.3%) | Current team_id: 22831 | Status: NONE | Elapsed: 200s | Avg: 0.95s/team | Est. remaining: 8566s (142.8m)
+[2026-02-10 11:54:00] Database committed at 140 teams
+[2026-02-10 11:54:10] Progress: 220/9195 (2.4%) | Current team_id: 23905 | Status: NONE | Elapsed: 210s | Avg: 0.95s/team | Est. remaining: 8558s (142.6m)
+[2026-02-10 11:54:10] Database committed at 150 teams
+[2026-02-10 11:54:40] Progress: 230/9195 (2.5%) | Current team_id: 25099 | Status: REGIONAL | Elapsed: 240s | Avg: 1.04s/team | Est. remaining: 9367s (156.1m)
+[2026-02-10 11:54:40] Database committed at 160 teams
+[2026-02-10 11:56:09] Progress: 240/9195 (2.6%) | Current team_id: 25900 | Status: NONE | Elapsed: 329s | Avg: 1.37s/team | Est. remaining: 12281s (204.7m)
+[2026-02-10 11:56:09] Database committed at 170 teams
+[2026-02-10 11:56:26] Progress: 240/9195 (2.6%) | Current team_id: 25900 | Status: NONE | Elapsed: 346s | Avg: 1.44s/team | Est. remaining: 12899s (215.0m)
+[2026-02-10 11:56:26] INTERRUPTED: Progress committed to database. Run again to resume.
+[2026-02-10 11:56:27] RESUMING from index 240 (team_id: 25900). Already processed: 240/9195 teams
+[2026-02-10 11:56:31] [241/9195] Team 26005 → NONE | Progress: 2.6% | Avg: 0.02s/team | ETA: 2.3m
+[2026-02-10 11:56:31] [242/9195] Team 26011 → REGIONAL | Progress: 2.6% | Avg: 0.02s/team | ETA: 2.4m
+[2026-02-10 11:56:35] [243/9195] Team 26062 → NONE | Progress: 2.6% | Avg: 0.03s/team | ETA: 4.7m
+[2026-02-10 11:56:52] [244/9195] Team 26089 → REGIONAL | Progress: 2.7% | Avg: 0.10s/team | ETA: 15.4m
+[2026-02-10 11:56:52] [245/9195] Team 26107 → NONE | Progress: 2.7% | Avg: 0.10s/team | ETA: 15.5m
+[2026-02-10 11:56:53] [246/9195] Team 26359 → NONE | Progress: 2.7% | Avg: 0.11s/team | ETA: 15.7m
+[2026-02-10 11:57:14] [247/9195] Team 26365 → NONE | Progress: 2.7% | Avg: 0.19s/team | ETA: 28.3m
+[2026-02-10 11:57:14] [248/9195] Team 26668 → NONE | Progress: 2.7% | Avg: 0.19s/team | ETA: 28.3m
+[2026-02-10 11:57:31] [249/9195] Team 26683 → NONE | Progress: 2.7% | Avg: 0.26s/team | ETA: 38.6m
+[2026-02-10 11:57:35] [250/9195] Team 26689 → REGIONAL | Progress: 2.7% | Avg: 0.27s/team | ETA: 40.6m
+[2026-02-10 11:57:35] ✓ CHECKPOINT: Database committed at 10 teams
+[2026-02-10 11:57:35] [251/9195] Team 26842 → NONE | Progress: 2.7% | Avg: 0.27s/team | ETA: 40.5m
+[2026-02-10 11:57:38] [250/9195] Team 26689 → REGIONAL | Progress: 2.7% | Avg: 0.28s/team | ETA: 42.1m
+[2026-02-10 11:57:38] INTERRUPTED: Progress committed to database. Run again to resume.
+[2026-02-10 11:59:37] RESUMING from index 250 (team_id: 26689). Already processed: 250/9195 teams
+[2026-02-10 11:59:38] [251/9195] Team 26842 → NONE | Progress: 2.7% | Avg: 0.00s/team | ETA: 0.2m
+[2026-02-10 11:59:38] [252/9195] Team 26857 → NONE | Progress: 2.7% | Avg: 0.00s/team | ETA: 0.3m
+[2026-02-10 11:59:38] [253/9195] Team 26932 → NONE | Progress: 2.8% | Avg: 0.00s/team | ETA: 0.5m
+[2026-02-10 11:59:42] [254/9195] Team 27013 → NONE | Progress: 2.8% | Avg: 0.02s/team | ETA: 2.7m
+[2026-02-10 11:59:43] [255/9195] Team 27202 → NONE | Progress: 2.8% | Avg: 0.02s/team | ETA: 2.9m
+[2026-02-10 11:59:43] [256/9195] Team 27226 → NONE | Progress: 2.8% | Avg: 0.02s/team | ETA: 3.0m
+[2026-02-10 11:59:43] [257/9195] Team 27256 → NONE | Progress: 2.8% | Avg: 0.02s/team | ETA: 3.2m
+[2026-02-10 11:59:43] [258/9195] Team 27289 → NONE | Progress: 2.8% | Avg: 0.02s/team | ETA: 3.3m
+[2026-02-10 11:59:44] ✗ HTTP ERROR [unknown]: /teams/27442/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 11:59:44]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:00:01] ✓ SUCCESS: Request succeeded on attempt 2: /teams/27442/awards?season%5B%5D=197
+[2026-02-10 12:00:01] [259/9195] Team 27442 → NONE | Progress: 2.8% | Avg: 0.09s/team | ETA: 13.5m
+[2026-02-10 12:00:01] [260/9195] Team 27826 → NONE | Progress: 2.8% | Avg: 0.09s/team | ETA: 13.5m
+[2026-02-10 12:00:01] ✓ CHECKPOINT: Database committed at 10 teams
+[2026-02-10 12:00:01] [261/9195] Team 27829 → NONE | Progress: 2.8% | Avg: 0.09s/team | ETA: 13.6m
+[2026-02-10 12:00:05] [262/9195] Team 27832 → NONE | Progress: 2.8% | Avg: 0.11s/team | ETA: 15.7m
+[2026-02-10 12:00:09] [263/9195] Team 27937 → NONE | Progress: 2.9% | Avg: 0.12s/team | ETA: 17.7m
+[2026-02-10 12:00:09] [264/9195] Team 27952 → NONE | Progress: 2.9% | Avg: 0.12s/team | ETA: 17.8m
+[2026-02-10 12:00:09] ✗ HTTP ERROR [unknown]: /teams/28123/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:00:09]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:00:30] ✓ SUCCESS: Request succeeded on attempt 2: /teams/28123/awards?season%5B%5D=197
+[2026-02-10 12:00:30] [265/9195] Team 28123 → REGIONAL | Progress: 2.9% | Avg: 0.20s/team | ETA: 29.4m
+[2026-02-10 12:00:30] [266/9195] Team 28225 → NONE | Progress: 2.9% | Avg: 0.20s/team | ETA: 29.6m
+[2026-02-10 12:00:31] [267/9195] Team 28321 → NONE | Progress: 2.9% | Avg: 0.20s/team | ETA: 29.6m
+[2026-02-10 12:00:34] [268/9195] Team 28351 → NONE | Progress: 2.9% | Avg: 0.21s/team | ETA: 31.5m
+[2026-02-10 12:00:38] [269/9195] Team 28438 → NONE | Progress: 2.9% | Avg: 0.22s/team | ETA: 33.4m
+[2026-02-10 12:00:42] [270/9195] Team 28441 → NONE | Progress: 2.9% | Avg: 0.24s/team | ETA: 35.3m
+[2026-02-10 12:00:42] ✓ CHECKPOINT: Database committed at 20 teams
+[2026-02-10 12:00:42] [271/9195] Team 28549 → NONE | Progress: 2.9% | Avg: 0.24s/team | ETA: 35.4m
+[2026-02-10 12:00:46] [272/9195] Team 28687 → NONE | Progress: 3.0% | Avg: 0.25s/team | ETA: 37.3m
+[2026-02-10 12:00:46] [273/9195] Team 28690 → NONE | Progress: 3.0% | Avg: 0.25s/team | ETA: 37.3m
+[2026-02-10 12:00:46] [274/9195] Team 28726 → NONE | Progress: 3.0% | Avg: 0.25s/team | ETA: 37.3m
+[2026-02-10 12:00:50] [275/9195] Team 28735 → REGIONAL | Progress: 3.0% | Avg: 0.26s/team | ETA: 39.2m
+[2026-02-10 12:00:54] [276/9195] Team 28897 → NONE | Progress: 3.0% | Avg: 0.28s/team | ETA: 41.0m
+[2026-02-10 12:00:54] [277/9195] Team 28990 → REGIONAL | Progress: 3.0% | Avg: 0.28s/team | ETA: 41.0m
+[2026-02-10 12:00:58] [278/9195] Team 29134 → NONE | Progress: 3.0% | Avg: 0.29s/team | ETA: 42.9m
+[2026-02-10 12:00:58] [279/9195] Team 29149 → NONE | Progress: 3.0% | Avg: 0.29s/team | ETA: 42.9m
+[2026-02-10 12:00:58] [280/9195] Team 29692 → NONE | Progress: 3.0% | Avg: 0.29s/team | ETA: 42.8m
+[2026-02-10 12:00:58] ✓ CHECKPOINT: Database committed at 30 teams
+[2026-02-10 12:00:58] ✗ HTTP ERROR [unknown]: /teams/30148/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:00:58]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:01:16] ✓ SUCCESS: Request succeeded on attempt 2: /teams/30148/awards?season%5B%5D=197
+[2026-02-10 12:01:16] [281/9195] Team 30148 → NONE | Progress: 3.1% | Avg: 0.35s/team | ETA: 51.9m
+[2026-02-10 12:01:16] [282/9195] Team 30178 → NONE | Progress: 3.1% | Avg: 0.35s/team | ETA: 51.9m
+[2026-02-10 12:01:16] [283/9195] Team 30238 → NONE | Progress: 3.1% | Avg: 0.35s/team | ETA: 51.9m
+[2026-02-10 12:01:17] [284/9195] Team 30244 → NONE | Progress: 3.1% | Avg: 0.35s/team | ETA: 51.9m
+[2026-02-10 12:01:20] [285/9195] Team 30391 → NONE | Progress: 3.1% | Avg: 0.36s/team | ETA: 53.6m
+[2026-02-10 12:01:21] [286/9195] Team 30490 → NONE | Progress: 3.1% | Avg: 0.36s/team | ETA: 53.6m
+[2026-02-10 12:01:21] [287/9195] Team 31057 → NONE | Progress: 3.1% | Avg: 0.36s/team | ETA: 53.6m
+[2026-02-10 12:01:21] ✗ HTTP ERROR [unknown]: /teams/31624/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:01:21]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:01:42] ✓ SUCCESS: Request succeeded on attempt 2: /teams/31624/awards?season%5B%5D=197
+[2026-02-10 12:01:42] [288/9195] Team 31624 → NONE | Progress: 3.1% | Avg: 0.43s/team | ETA: 64.2m
+[2026-02-10 12:01:42] [289/9195] Team 31627 → NONE | Progress: 3.1% | Avg: 0.43s/team | ETA: 64.1m
+[2026-02-10 12:01:43] [290/9195] Team 31816 → NONE | Progress: 3.2% | Avg: 0.43s/team | ETA: 64.0m
+[2026-02-10 12:01:43] ✓ CHECKPOINT: Database committed at 40 teams
+[2026-02-10 12:01:46] [291/9195] Team 31828 → REGIONAL | Progress: 3.2% | Avg: 0.44s/team | ETA: 65.7m
+[2026-02-10 12:01:47] [292/9195] Team 31921 → NONE | Progress: 3.2% | Avg: 0.44s/team | ETA: 65.7m
+[2026-02-10 12:01:47] [293/9195] Team 31924 → NONE | Progress: 3.2% | Avg: 0.44s/team | ETA: 65.6m
+[2026-02-10 12:01:48] [294/9195] Team 32005 → NONE | Progress: 3.2% | Avg: 0.44s/team | ETA: 65.6m
+[2026-02-10 12:01:48] [295/9195] Team 32038 → REGIONAL | Progress: 3.2% | Avg: 0.44s/team | ETA: 65.6m
+[2026-02-10 12:01:48] [296/9195] Team 32230 → NONE | Progress: 3.2% | Avg: 0.44s/team | ETA: 65.6m
+[2026-02-10 12:01:49] [297/9195] Team 32554 → NONE | Progress: 3.2% | Avg: 0.44s/team | ETA: 65.6m
+[2026-02-10 12:01:49] ✗ HTTP ERROR [unknown]: /teams/32641/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:01:49]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:02:06] ✓ SUCCESS: Request succeeded on attempt 2: /teams/32641/awards?season%5B%5D=197
+[2026-02-10 12:02:06] [298/9195] Team 32641 → NONE | Progress: 3.2% | Avg: 0.50s/team | ETA: 74.0m
+[2026-02-10 12:02:10] [299/9195] Team 32647 → NONE | Progress: 3.3% | Avg: 0.51s/team | ETA: 75.7m
+[2026-02-10 12:02:14] [300/9195] Team 33238 → NONE | Progress: 3.3% | Avg: 0.52s/team | ETA: 77.2m
+[2026-02-10 12:02:14] ✓ CHECKPOINT: Database committed at 50 teams
+[2026-02-10 12:02:14] [301/9195] Team 33292 → NONE | Progress: 3.3% | Avg: 0.52s/team | ETA: 77.1m
+[2026-02-10 12:02:14] [302/9195] Team 33301 → REGIONAL | Progress: 3.3% | Avg: 0.52s/team | ETA: 77.0m
+[2026-02-10 12:02:15] [303/9195] Team 33304 → NONE | Progress: 3.3% | Avg: 0.52s/team | ETA: 76.8m
+[2026-02-10 12:02:15] [304/9195] Team 33397 → NONE | Progress: 3.3% | Avg: 0.52s/team | ETA: 76.7m
+[2026-02-10 12:02:15] [305/9195] Team 33424 → NONE | Progress: 3.3% | Avg: 0.52s/team | ETA: 76.6m
+[2026-02-10 12:02:15] ✗ HTTP ERROR [unknown]: /teams/33787/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:02:15]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:02:33] ✓ SUCCESS: Request succeeded on attempt 2: /teams/33787/awards?season%5B%5D=197
+[2026-02-10 12:02:33] [306/9195] Team 33787 → NONE | Progress: 3.3% | Avg: 0.57s/team | ETA: 84.8m
+[2026-02-10 12:02:33] [307/9195] Team 33811 → REGIONAL | Progress: 3.3% | Avg: 0.57s/team | ETA: 84.6m
+[2026-02-10 12:02:33] [308/9195] Team 33841 → NONE | Progress: 3.3% | Avg: 0.57s/team | ETA: 84.4m
+[2026-02-10 12:02:33] [309/9195] Team 34015 → REGIONAL | Progress: 3.4% | Avg: 0.57s/team | ETA: 84.3m
+[2026-02-10 12:02:37] [310/9195] Team 34201 → NONE | Progress: 3.4% | Avg: 0.58s/team | ETA: 85.8m
+[2026-02-10 12:02:37] ✓ CHECKPOINT: Database committed at 60 teams
+[2026-02-10 12:02:37] [311/9195] Team 34204 → NONE | Progress: 3.4% | Avg: 0.58s/team | ETA: 85.6m
+[2026-02-10 12:02:38] [312/9195] Team 34474 → REGIONAL | Progress: 3.4% | Avg: 0.58s/team | ETA: 85.5m
+[2026-02-10 12:02:38] [313/9195] Team 35107 → NONE | Progress: 3.4% | Avg: 0.58s/team | ETA: 85.3m
+[2026-02-10 12:02:38] ✗ HTTP ERROR [unknown]: /teams/35164/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:02:38]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:02:59] ✓ SUCCESS: Request succeeded on attempt 2: /teams/35164/awards?season%5B%5D=197
+[2026-02-10 12:02:59] [314/9195] Team 35164 → NONE | Progress: 3.4% | Avg: 0.64s/team | ETA: 94.9m
+[2026-02-10 12:02:59] [315/9195] Team 35362 → REGIONAL | Progress: 3.4% | Avg: 0.64s/team | ETA: 94.7m
+[2026-02-10 12:02:59] [316/9195] Team 35458 → NONE | Progress: 3.4% | Avg: 0.64s/team | ETA: 94.5m
+[2026-02-10 12:03:03] [317/9195] Team 35602 → REGIONAL | Progress: 3.4% | Avg: 0.65s/team | ETA: 95.9m
+[2026-02-10 12:03:03] [318/9195] Team 35605 → NONE | Progress: 3.5% | Avg: 0.65s/team | ETA: 95.7m
+[2026-02-10 12:03:04] [319/9195] Team 35671 → NONE | Progress: 3.5% | Avg: 0.65s/team | ETA: 95.6m
+[2026-02-10 12:03:04] [320/9195] Team 35707 → REGIONAL | Progress: 3.5% | Avg: 0.64s/team | ETA: 95.4m
+[2026-02-10 12:03:04] ✓ CHECKPOINT: Database committed at 70 teams
+[2026-02-10 12:03:04] [321/9195] Team 35800 → NONE | Progress: 3.5% | Avg: 0.64s/team | ETA: 95.2m
+[2026-02-10 12:03:04] ✗ HTTP ERROR [unknown]: /teams/35815/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:03:04]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:03:25] ✓ SUCCESS: Request succeeded on attempt 2: /teams/35815/awards?season%5B%5D=197
+[2026-02-10 12:03:25] [322/9195] Team 35815 → NONE | Progress: 3.5% | Avg: 0.71s/team | ETA: 104.6m
+[2026-02-10 12:03:26] [323/9195] Team 35836 → NONE | Progress: 3.5% | Avg: 0.71s/team | ETA: 104.4m
+[2026-02-10 12:03:26] [324/9195] Team 35863 → NONE | Progress: 3.5% | Avg: 0.70s/team | ETA: 104.2m
+[2026-02-10 12:03:30] [325/9195] Team 35866 → NONE | Progress: 3.5% | Avg: 0.71s/team | ETA: 105.6m
+[2026-02-10 12:03:30] [326/9195] Team 35890 → NONE | Progress: 3.5% | Avg: 0.71s/team | ETA: 105.4m
+[2026-02-10 12:03:34] [327/9195] Team 35938 → NONE | Progress: 3.6% | Avg: 0.72s/team | ETA: 106.8m
+[2026-02-10 12:03:34] [328/9195] Team 35950 → REGIONAL | Progress: 3.6% | Avg: 0.72s/team | ETA: 106.6m
+[2026-02-10 12:03:34] [329/9195] Team 35956 → NONE | Progress: 3.6% | Avg: 0.72s/team | ETA: 106.4m
+[2026-02-10 12:03:35] [330/9195] Team 35974 → REGIONAL | Progress: 3.6% | Avg: 0.72s/team | ETA: 106.1m
+[2026-02-10 12:03:35] ✓ CHECKPOINT: Database committed at 80 teams
+[2026-02-10 12:03:35] [331/9195] Team 35977 → NONE | Progress: 3.6% | Avg: 0.72s/team | ETA: 105.9m
+[2026-02-10 12:03:35] [332/9195] Team 35980 → NONE | Progress: 3.6% | Avg: 0.72s/team | ETA: 105.7m
+[2026-02-10 12:03:35] ✗ HTTP ERROR [unknown]: /teams/35992/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:03:35]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:03:53] ✓ SUCCESS: Request succeeded on attempt 2: /teams/35992/awards?season%5B%5D=197
+[2026-02-10 12:03:53] [333/9195] Team 35992 → NONE | Progress: 3.6% | Avg: 0.77s/team | ETA: 113.1m
+[2026-02-10 12:03:56] [334/9195] Team 36013 → NONE | Progress: 3.6% | Avg: 0.77s/team | ETA: 114.4m
+[2026-02-10 12:03:57] [335/9195] Team 36016 → NONE | Progress: 3.6% | Avg: 0.77s/team | ETA: 114.2m
+[2026-02-10 12:03:57] [336/9195] Team 36031 → NONE | Progress: 3.7% | Avg: 0.77s/team | ETA: 114.0m
+[2026-02-10 12:03:57] [337/9195] Team 36034 → NONE | Progress: 3.7% | Avg: 0.77s/team | ETA: 113.7m
+[2026-02-10 12:04:01] [338/9195] Team 36040 → NONE | Progress: 3.7% | Avg: 0.78s/team | ETA: 115.2m
+[2026-02-10 12:04:02] [339/9195] Team 36055 → NONE | Progress: 3.7% | Avg: 0.78s/team | ETA: 115.1m
+[2026-02-10 12:04:03] [340/9195] Team 36058 → NONE | Progress: 3.7% | Avg: 0.78s/team | ETA: 115.1m
+[2026-02-10 12:04:03] ✓ CHECKPOINT: Database committed at 90 teams
+[2026-02-10 12:04:03] [341/9195] Team 36097 → NONE | Progress: 3.7% | Avg: 0.78s/team | ETA: 114.9m
+[2026-02-10 12:04:07] [342/9195] Team 36148 → NONE | Progress: 3.7% | Avg: 0.79s/team | ETA: 116.3m
+[2026-02-10 12:04:07] ✗ HTTP ERROR [unknown]: /teams/36229/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:04:07]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:04:25] ✓ SUCCESS: Request succeeded on attempt 2: /teams/36229/awards?season%5B%5D=197
+[2026-02-10 12:04:25] [343/9195] Team 36229 → REGIONAL | Progress: 3.7% | Avg: 0.84s/team | ETA: 123.6m
+[2026-02-10 12:04:29] [344/9195] Team 36232 → NONE | Progress: 3.7% | Avg: 0.85s/team | ETA: 125.0m
+[2026-02-10 12:04:29] [345/9195] Team 36238 → NONE | Progress: 3.8% | Avg: 0.85s/team | ETA: 124.8m
+[2026-02-10 12:04:30] [346/9195] Team 36376 → NONE | Progress: 3.8% | Avg: 0.84s/team | ETA: 124.5m
+[2026-02-10 12:04:30] [347/9195] Team 36457 → WORLD | Progress: 3.8% | Avg: 0.84s/team | ETA: 124.2m
+[2026-02-10 12:04:30] [348/9195] Team 36496 → NONE | Progress: 3.8% | Avg: 0.84s/team | ETA: 124.0m
+[2026-02-10 12:04:30] [349/9195] Team 36502 → NONE | Progress: 3.8% | Avg: 0.84s/team | ETA: 123.7m
+[2026-02-10 12:04:31] [350/9195] Team 36730 → NONE | Progress: 3.8% | Avg: 0.84s/team | ETA: 123.5m
+[2026-02-10 12:04:31] ✓ CHECKPOINT: Database committed at 100 teams
+[2026-02-10 12:04:34] [351/9195] Team 36742 → NONE | Progress: 3.8% | Avg: 0.85s/team | ETA: 124.7m
+[2026-02-10 12:04:35] ✗ HTTP ERROR [unknown]: /teams/36745/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:04:35]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:04:52] ✓ SUCCESS: Request succeeded on attempt 2: /teams/36745/awards?season%5B%5D=197
+[2026-02-10 12:04:52] [352/9195] Team 36745 → NONE | Progress: 3.8% | Avg: 0.89s/team | ETA: 131.6m
+[2026-02-10 12:04:52] [353/9195] Team 36856 → REGIONAL | Progress: 3.8% | Avg: 0.89s/team | ETA: 131.4m
+[2026-02-10 12:04:56] [354/9195] Team 36862 → NONE | Progress: 3.8% | Avg: 0.90s/team | ETA: 132.7m
+[2026-02-10 12:05:00] [355/9195] Team 36892 → NONE | Progress: 3.9% | Avg: 0.91s/team | ETA: 133.9m
+[2026-02-10 12:05:00] [356/9195] Team 36895 → NONE | Progress: 3.9% | Avg: 0.91s/team | ETA: 133.6m
+[2026-02-10 12:05:04] [357/9195] Team 37021 → NONE | Progress: 3.9% | Avg: 0.92s/team | ETA: 134.8m
+[2026-02-10 12:05:08] [358/9195] Team 37024 → REGIONAL | Progress: 3.9% | Avg: 0.92s/team | ETA: 135.9m
+[2026-02-10 12:05:08] [359/9195] Team 37030 → NONE | Progress: 3.9% | Avg: 0.92s/team | ETA: 135.7m
+[2026-02-10 12:05:09] [360/9195] Team 37159 → NONE | Progress: 3.9% | Avg: 0.92s/team | ETA: 135.4m
+[2026-02-10 12:05:09] ✓ CHECKPOINT: Database committed at 110 teams
+[2026-02-10 12:05:09] [361/9195] Team 37165 → NONE | Progress: 3.9% | Avg: 0.92s/team | ETA: 135.1m
+[2026-02-10 12:05:09] [362/9195] Team 37168 → NONE | Progress: 3.9% | Avg: 0.92s/team | ETA: 134.8m
+[2026-02-10 12:05:09] [363/9195] Team 37192 → NONE | Progress: 3.9% | Avg: 0.91s/team | ETA: 134.6m
+[2026-02-10 12:05:13] [364/9195] Team 37300 → NONE | Progress: 4.0% | Avg: 0.92s/team | ETA: 135.7m
+[2026-02-10 12:05:13] ✗ HTTP ERROR [unknown]: /teams/37336/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:05:13]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:05:31] ✓ SUCCESS: Request succeeded on attempt 2: /teams/37336/awards?season%5B%5D=197
+[2026-02-10 12:05:31] [365/9195] Team 37336 → NONE | Progress: 4.0% | Avg: 0.97s/team | ETA: 142.4m
+[2026-02-10 12:05:31] [366/9195] Team 37705 → NONE | Progress: 4.0% | Avg: 0.97s/team | ETA: 142.1m
+[2026-02-10 12:05:31] [367/9195] Team 37723 → NONE | Progress: 4.0% | Avg: 0.96s/team | ETA: 141.9m
+[2026-02-10 12:05:32] [368/9195] Team 37729 → NONE | Progress: 4.0% | Avg: 0.96s/team | ETA: 141.6m
+[2026-02-10 12:05:32] [369/9195] Team 37732 → NONE | Progress: 4.0% | Avg: 0.96s/team | ETA: 141.3m
+[2026-02-10 12:05:36] [370/9195] Team 37816 → REGIONAL | Progress: 4.0% | Avg: 0.97s/team | ETA: 142.4m
+[2026-02-10 12:05:36] ✓ CHECKPOINT: Database committed at 120 teams
+[2026-02-10 12:05:36] [371/9195] Team 37975 → NONE | Progress: 4.0% | Avg: 0.97s/team | ETA: 142.1m
+[2026-02-10 12:05:36] [372/9195] Team 37981 → NONE | Progress: 4.0% | Avg: 0.96s/team | ETA: 141.8m
+[2026-02-10 12:05:36] ✗ HTTP ERROR [unknown]: /teams/37984/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:05:36]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:05:54] ✓ SUCCESS: Request succeeded on attempt 2: /teams/37984/awards?season%5B%5D=197
+[2026-02-10 12:05:54] [373/9195] Team 37984 → NONE | Progress: 4.1% | Avg: 1.01s/team | ETA: 148.3m
+[2026-02-10 12:05:54] [374/9195] Team 38170 → NONE | Progress: 4.1% | Avg: 1.01s/team | ETA: 148.1m
+[2026-02-10 12:05:55] [375/9195] Team 38212 → NONE | Progress: 4.1% | Avg: 1.01s/team | ETA: 147.8m
+[2026-02-10 12:05:55] [376/9195] Team 38215 → NONE | Progress: 4.1% | Avg: 1.00s/team | ETA: 147.5m
+[2026-02-10 12:05:55] [377/9195] Team 38248 → NONE | Progress: 4.1% | Avg: 1.00s/team | ETA: 147.2m
+[2026-02-10 12:05:59] [378/9195] Team 38275 → NONE | Progress: 4.1% | Avg: 1.01s/team | ETA: 148.2m
+[2026-02-10 12:05:59] [379/9195] Team 38278 → REGIONAL | Progress: 4.1% | Avg: 1.01s/team | ETA: 147.9m
+[2026-02-10 12:05:59] ✗ HTTP ERROR [unknown]: /teams/38362/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:05:59]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:06:20] ✓ SUCCESS: Request succeeded on attempt 2: /teams/38362/awards?season%5B%5D=197
+[2026-02-10 12:06:20] [380/9195] Team 38362 → REGIONAL | Progress: 4.1% | Avg: 1.06s/team | ETA: 155.6m
+[2026-02-10 12:06:20] ✓ CHECKPOINT: Database committed at 130 teams
+[2026-02-10 12:06:20] [381/9195] Team 38416 → NONE | Progress: 4.1% | Avg: 1.06s/team | ETA: 155.3m
+[2026-02-10 12:06:21] [382/9195] Team 38602 → NONE | Progress: 4.2% | Avg: 1.06s/team | ETA: 155.0m
+[2026-02-10 12:06:24] [383/9195] Team 38923 → NONE | Progress: 4.2% | Avg: 1.06s/team | ETA: 156.0m
+[2026-02-10 12:06:25] [384/9195] Team 38926 → REGIONAL | Progress: 4.2% | Avg: 1.06s/team | ETA: 155.7m
+[2026-02-10 12:06:28] [385/9195] Team 38962 → REGIONAL | Progress: 4.2% | Avg: 1.07s/team | ETA: 156.4m
+[2026-02-10 12:06:28] [386/9195] Team 39007 → NONE | Progress: 4.2% | Avg: 1.06s/team | ETA: 156.1m
+[2026-02-10 12:06:31] [387/9195] Team 39133 → NONE | Progress: 4.2% | Avg: 1.07s/team | ETA: 157.0m
+[2026-02-10 12:06:32] [388/9195] Team 39136 → REGIONAL | Progress: 4.2% | Avg: 1.07s/team | ETA: 156.8m
+[2026-02-10 12:06:32] [389/9195] Team 39139 → NONE | Progress: 4.2% | Avg: 1.07s/team | ETA: 156.5m
+[2026-02-10 12:06:33] [390/9195] Team 39226 → NONE | Progress: 4.2% | Avg: 1.06s/team | ETA: 156.2m
+[2026-02-10 12:06:33] ✓ CHECKPOINT: Database committed at 140 teams
+[2026-02-10 12:06:33] ✗ HTTP ERROR [unknown]: /teams/39394/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:06:33]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:06:50] ✓ SUCCESS: Request succeeded on attempt 2: /teams/39394/awards?season%5B%5D=197
+[2026-02-10 12:06:50] [391/9195] Team 39394 → NONE | Progress: 4.3% | Avg: 1.11s/team | ETA: 162.4m
+[2026-02-10 12:06:50] [392/9195] Team 39397 → NONE | Progress: 4.3% | Avg: 1.10s/team | ETA: 162.1m
+[2026-02-10 12:06:54] [393/9195] Team 39400 → NONE | Progress: 4.3% | Avg: 1.11s/team | ETA: 163.0m
+[2026-02-10 12:06:54] [394/9195] Team 39442 → NONE | Progress: 4.3% | Avg: 1.11s/team | ETA: 162.7m
+[2026-02-10 12:06:58] [395/9195] Team 39454 → NONE | Progress: 4.3% | Avg: 1.12s/team | ETA: 163.7m
+[2026-02-10 12:06:59] [396/9195] Team 39487 → REGIONAL | Progress: 4.3% | Avg: 1.11s/team | ETA: 163.4m
+[2026-02-10 12:06:59] [397/9195] Team 39562 → NONE | Progress: 4.3% | Avg: 1.11s/team | ETA: 163.0m
+[2026-02-10 12:07:03] [398/9195] Team 39757 → NONE | Progress: 4.3% | Avg: 1.12s/team | ETA: 164.1m
+[2026-02-10 12:07:03] [399/9195] Team 39760 → WORLD | Progress: 4.3% | Avg: 1.12s/team | ETA: 163.8m
+[2026-02-10 12:07:03] [400/9195] Team 39847 → NONE | Progress: 4.4% | Avg: 1.11s/team | ETA: 163.4m
+[2026-02-10 12:07:03] ✓ CHECKPOINT: Database committed at 150 teams
+[2026-02-10 12:07:07] [401/9195] Team 39850 → NONE | Progress: 4.4% | Avg: 1.12s/team | ETA: 164.4m
+[2026-02-10 12:07:11] [402/9195] Team 39853 → NONE | Progress: 4.4% | Avg: 1.13s/team | ETA: 165.3m
+[2026-02-10 12:07:11] [403/9195] Team 39964 → NONE | Progress: 4.4% | Avg: 1.13s/team | ETA: 165.0m
+[2026-02-10 12:07:11] ✗ HTTP ERROR [unknown]: /teams/39991/awards?season%5B%5D=197 (attempt 1/5)
+[2026-02-10 12:07:11]   ⟳ RETRYING in 17 seconds...
+[2026-02-10 12:07:29] ✓ SUCCESS: Request succeeded on attempt 2: /teams/39991/awards?season%5B%5D=197
+[2026-02-10 12:07:29] [404/9195] Team 39991 → NONE | Progress: 4.4% | Avg: 1.17s/team | ETA: 170.9m
+[2026-02-10 12:07:29] [405/9195] Team 40006 → NONE | Progress: 4.4% | Avg: 1.16s/team | ETA: 170.6m
+[2026-02-10 12:07:29] [406/9195] Team 40093 → REGIONAL | Progress: 4.4% | Avg: 1.16s/team | ETA: 170.3m
+[2026-02-10 12:07:30] [407/9195] Team 40096 → NONE | Progress: 4.4% | Avg: 1.16s/team | ETA: 170.0m
+[2026-02-10 12:07:34] [408/9195] Team 40099 → NONE | Progress: 4.4% | Avg: 1.17s/team | ETA: 170.9m
+[2026-02-10 12:07:34] [409/9195] Team 40102 → NONE | Progress: 4.4% | Avg: 1.16s/team | ETA: 170.5m
+[2026-02-10 12:07:34] [410/9195] Team 40162 → WORLD | Progress: 4.5% | Avg: 1.16s/team | ETA: 170.2m
+[2026-02-10 12:07:34] ✓ CHECKPOINT: Database committed at 160 teams
+[2026-02-10 12:07:34] [411/9195] Team 40231 → REGIONAL | Progress: 4.5% | Avg: 1.16s/team | ETA: 169.9m
+[2026-02-10 12:07:37] [410/9195] Team 40162 → WORLD | Progress: 4.5% | Avg: 1.17s/team | ETA: 171.2m
+[2026-02-10 12:07:37] INTERRUPTED: Progress committed to database. Run again to resume.

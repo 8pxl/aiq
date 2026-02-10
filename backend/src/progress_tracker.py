@@ -80,31 +80,29 @@ class ProgressTracker:
         self.last_processed_team_id = team_id
         self.processed_count = current_index + 1
 
-        # Log every 10 teams or if forced
-        if self.processed_count % 10 == 0 or force_save:
-            elapsed = (
-                (datetime.now() - self.start_time).total_seconds()
-                if self.start_time
-                else 0
-            )
-            remaining_teams = self.total_teams - self.processed_count
-            avg_time_per_team = (
-                elapsed / self.processed_count if self.processed_count > 0 else 0
-            )
-            estimated_remaining = avg_time_per_team * remaining_teams
+        # Calculate timing metrics
+        elapsed = (
+            (datetime.now() - self.start_time).total_seconds() if self.start_time else 0
+        )
+        remaining_teams = self.total_teams - self.processed_count
+        avg_time_per_team = (
+            elapsed / self.processed_count if self.processed_count > 0 else 0
+        )
+        estimated_remaining = avg_time_per_team * remaining_teams
 
-            progress_pct = (
-                (self.processed_count / self.total_teams * 100)
-                if self.total_teams > 0
-                else 0
-            )
+        progress_pct = (
+            (self.processed_count / self.total_teams * 100)
+            if self.total_teams > 0
+            else 0
+        )
 
-            self._log(
-                f"Progress: {self.processed_count}/{self.total_teams} ({progress_pct:.1f}%) | "
-                f"Current team_id: {team_id} | Status: {qualification_status} | "
-                f"Elapsed: {elapsed:.0f}s | Avg: {avg_time_per_team:.2f}s/team | "
-                f"Est. remaining: {estimated_remaining:.0f}s ({estimated_remaining / 60:.1f}m)"
-            )
+        # Log EVERY team processed
+        self._log(
+            f"[{self.processed_count}/{self.total_teams}] Team {team_id} → {qualification_status} | "
+            f"Progress: {progress_pct:.1f}% | "
+            f"Avg: {avg_time_per_team:.2f}s/team | "
+            f"ETA: {estimated_remaining / 60:.1f}m"
+        )
 
         # ONLY save checkpoint to file if force_save is True
         if force_save:

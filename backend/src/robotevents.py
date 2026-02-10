@@ -15,29 +15,119 @@ class RobotEvents:
     base: str
     season: int
     logger: logging.Logger = logging.getLogger(__name__)
+    progress_tracker: Optional[ProgressTracker] = None
 
-    def __init__(self, token: str):
+    def __init__(self, token: str, progress_tracker: Optional[ProgressTracker] = None):
         self.token = token
         self.base = "https://www.robotevents.com/api/v2"
         self.season = 197
         # self.season = 190
         self.header = {"Authorization": f"Bearer {token}"}
+        self.progress_tracker = progress_tracker
 
     def request(self, path: str, max_retries=5, delay=17) -> Any | None:  # pyright: ignore[reportExplicitAny]
         if not path.startswith("/"):
-            self.logger.exception("path needs to start with a blackslash")
+            error_msg = f"ERROR: path needs to start with a forward slash: {path}"
+            self.logger.error(error_msg)
+            if self.progress_tracker:
+                self.progress_tracker._log(error_msg)
             return None
         url = self.base + path
+
         for attempt in range(max_retries):
-            res = requests.get(url, headers=self.header)
             try:
+                res = requests.get(url, headers=self.header)
                 res.raise_for_status()
+                # Log successful request on first attempt or after retry
+                if attempt > 0:
+                    success_msg = (
+                        f"✓ SUCCESS: Request succeeded on attempt {attempt + 1}: {path}"
+                    )
+                    self.logger.info(success_msg)
+                    if self.progress_tracker:
+                        self.progress_tracker._log(success_msg)
                 return res.json()  # pyright: ignore[reportAny]
-            except requests.RequestException as exc:
-                self.logger.exception("API request failed: %s %s", url, exc)
+
+            except requests.HTTPError as exc:
+                status_code = exc.response.status_code if exc.response else "unknown"
+                error_msg = f"✗ HTTP ERROR [{status_code}]: {path} (attempt {attempt + 1}/{max_retries})"
+                self.logger.error(error_msg)
+                if self.progress_tracker:
+                    self.progress_tracker._log(error_msg)
+
                 if attempt < max_retries - 1:
-                    print(f"failed retry {attempt}, waiting, {delay} seconds")
+                    retry_msg = f"  ⟳ RETRYING in {delay} seconds..."
+                    self.logger.warning(retry_msg)
+                    if self.progress_tracker:
+                        self.progress_tracker._log(retry_msg)
                     time.sleep(delay)
+                else:
+                    final_msg = f"✗ FAILED: Max retries reached for {path}"
+                    self.logger.error(final_msg)
+                    if self.progress_tracker:
+                        self.progress_tracker._log(final_msg)
+
+            except requests.RequestException as exc:
+                error_msg = f"✗ REQUEST ERROR: {type(exc).__name__} - {path} (attempt {attempt + 1}/{max_retries})"
+                self.logger.error(error_msg)
+                if self.progress_tracker:
+                    self.progress_tracker._log(error_msg)
+
+                if attempt < max_retries - 1:
+                    retry_msg = f"  ⟳ RETRYING in {delay} seconds..."
+                    self.logger.warning(retry_msg)
+                    if self.progress_tracker:
+                        self.progress_tracker._log(retry_msg)
+                    time.sleep(delay)
+                else:
+                    final_msg = f"✗ FAILED: Max retries reached for {path}"
+                    self.logger.error(final_msg)
+                    if self.progress_tracker:
+                        self.progress_tracker._log(final_msg)
+
+        return None
+        url = self.base + path
+
+        for attempt in range(max_retries):
+            try:
+                res = requests.get(url, headers=self.header)
+                res.raise_for_status()
+                # Log successful request on first attempt or after retry
+                if attempt > 0:
+                    self.logger.info(
+                        "SUCCESS: Request succeeded on attempt %d: %s", attempt + 1, url
+                    )
+                return res.json()  # pyright: ignore[reportAny]
+
+            except requests.HTTPError as exc:
+                status_code = exc.response.status_code if exc.response else "unknown"
+                self.logger.error(
+                    "HTTP ERROR [%s]: %s (attempt %d/%d)",
+                    status_code,
+                    url,
+                    attempt + 1,
+                    max_retries,
+                )
+                if attempt < max_retries - 1:
+                    self.logger.warning("RETRYING in %d seconds...", delay)
+                    time.sleep(delay)
+                else:
+                    self.logger.error("FAILED: Max retries reached for %s", url)
+
+            except requests.RequestException as exc:
+                self.logger.error(
+                    "REQUEST ERROR: %s - %s (attempt %d/%d)",
+                    type(exc).__name__,
+                    url,
+                    attempt + 1,
+                    max_retries,
+                )
+                if attempt < max_retries - 1:
+                    self.logger.warning("RETRYING in %d seconds...", delay)
+                    time.sleep(delay)
+                else:
+                    self.logger.error("FAILED: Max retries reached for %s", url)
+
         return None
 
     def get_qualifications(self, robotevents_id: int) -> Qualification:
@@ -217,6 +307,9 @@ class RobotEvents:
         if progress_tracker is None:
             progress_tracker = ProgressTracker()
 
+        # Set progress tracker on the instance so request() can use it
+        self.progress_tracker = progress_tracker
+
         start_index = progress_tracker.initialize(len(teams), resume=resume)
 
         # worlds_teams = self.get_worlds_teams()
@@ -230,32 +323,47 @@ class RobotEvents:
             for i in range(start_index, len(teams)):
                 team = teams[i]
 
-                # Determine qualification status
-                if worlds_teams and team in worlds_teams:
-                    q = Qualification.WORLD
-                else:
-                    q = self.get_qualifications(team)
+                try:
+                    # Determine qualification status
+                    if worlds_teams and team in worlds_teams:
+                        q = Qualification.WORLD
+                    else:
+                        q = self.get_qualifications(team)
 
-                # Upsert to database immediately
-                qual_obj = Qualifications(team_id=team, status=q)
-                db.upsert_quals(session, qual_obj)
-                processed_count += 1
+                    # Upsert to database immediately
+                    qual_obj = Qualifications(team_id=team, status=q)
+                    db.upsert_quals(session, qual_obj)
+                    processed_count += 1
 
-                # Periodic commit to save progress to database
-                if processed_count % commit_interval == 0:
-                    session.commit()
-                    # Track what was committed
-                    last_committed_index = i
-                    last_committed_team = team
-                    last_committed_status = q.name
-                    # ONLY update progress tracker AFTER commit succeeds
-                    progress_tracker.update_progress(i, team, q.name, force_save=True)
-                    progress_tracker._log(
-                        f"Database committed at {processed_count} teams"
-                    )
-                # For non-commit iterations, just update progress for logging (don't save checkpoint)
-                elif processed_count % 10 == 0:
+                    # Update progress tracker for every team
                     progress_tracker.update_progress(i, team, q.name, force_save=False)
+
+                    # Periodic commit to save progress to database
+                    if processed_count % commit_interval == 0:
+                        session.commit()
+                        # Track what was committed
+                        last_committed_index = i
+                        last_committed_team = team
+                        last_committed_status = q.name
+                        # Save checkpoint after commit
+                        progress_tracker._save_progress()
+                        progress_tracker._log(
+                            f"✓ CHECKPOINT: Database committed at {processed_count} teams"
+                        )
+
+                except Exception as e:
+                    # Log the error but continue processing other teams
+                    progress_tracker._log(
+                        f"ERROR processing team {team} at index {i}: {type(e).__name__} - {e}"
+                    )
+                    self.logger.error(
+                        "ERROR processing team %d at index %d: %s",
+                        team,
+                        i,
+                        e,
+                        exc_info=True,
+                    )
+                    # Continue to next team rather than stopping entire process
 
             # Final commit for any remaining changes
             session.commit()
