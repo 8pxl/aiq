@@ -3,6 +3,7 @@ import time
 from typing import Any, Optional
 import requests
 from enum import Enum
+from sqlmodel import Session, select
 import db
 from tables import Qualification, Qualifications, Teams
 from progress_tracker import ProgressTracker
@@ -81,47 +82,92 @@ class RobotEvents:
     #     )
     #     return team
     #
-    def parse_skills(self, ms: bool) -> list[Teams]:
+    def parse_skills(self, session, ms: bool):
+        """
+        Parse skills rankings and update/create teams in the database.
+
+        For existing teams: updates world_rank, score, programming, and driver fields
+        For new teams: creates full team record with all fields
+
+        Args:
+            session: SQLModel Session object for database operations
+            ms: Boolean - True for Middle School, False for High School
+        """
         if ms:
             url = f"https://www.robotevents.com/api/seasons/{self.season}/skills?post_season=0&grade_level=Middle%20School"
         else:
             url = f"https://www.robotevents.com/api/seasons/{self.season}/skills?post_season=0&grade_level=High%20School"
+
         res = requests.get(url)
         try:
             res.raise_for_status()
         except requests.RequestException as exc:
             self.logger.exception("API request failed: %s %s", url, exc)
+            return
+
         res = res.json()
-        teams = []
+        updated_count = 0
+        created_count = 0
         start = time.time()
-        for team in res:
-            print("took", time.time() - start)
-            print("adding team ", team["team"]["team"])
+
+        for team_data in res:
+            print(
+                f"Processing team {team_data['team']['team']} (took {time.time() - start:.2f}s)"
+            )
             start = time.time()
-            tt = team["team"]
-            country: str = (tt["country"],)  # pyright: ignore[reportAny, reportAssignmentType]
-            region: str | None = tt["eventRegion"]
-            if not region:
-                region = country
-            teams.append(
-                Teams(
-                    id=tt["id"],  # pyright: ignore[reportAny]
+
+            tt = team_data["team"]
+            team_id = tt["id"]  # pyright: ignore[reportAny]
+
+            # Check if team already exists in database
+            existing_team = session.get(Teams, team_id)
+
+            if existing_team:
+                # Update existing team's skill scores
+                existing_team.world_rank = team_data["rank"]
+                existing_team.score = team_data["scores"]["score"]
+                existing_team.programming = team_data["scores"]["programming"]
+                existing_team.driver = team_data["scores"]["driver"]
+                updated_count += 1
+                print(f"  Updated existing team: {existing_team.number}")
+            else:
+                # Create new team with all fields
+                country: str = tt["country"]  # pyright: ignore[reportAny, reportAssignmentType]
+                region: str | None = tt["eventRegion"]
+                if not region:
+                    region = country
+
+                new_team = Teams(
+                    id=team_id,
                     number=tt["team"],  # pyright: ignore[reportAny]
                     organization=tt["organization"],  # pyright: ignore[reportAny]
                     country=country,
                     region=region,
                     grade=tt["gradeLevel"],  # pyright: ignore[reportAny]
-                    # qualification = self.get_qualifications(team['team']['id']),  # pyright: ignore[reportAny]
-                    world_rank=team["rank"],
-                    score=team["scores"]["score"],
-                    programming=team["scores"]["programming"],
-                    driver=team["scores"]["driver"],
+                    world_rank=team_data["rank"],
+                    score=team_data["scores"]["score"],
+                    programming=team_data["scores"]["programming"],
+                    driver=team_data["scores"]["driver"],
                 )
-            )
-            if len(teams) >= 10000:
-                print("10000 limit reached! ")
+                session.add(new_team)
+                created_count += 1
+                print(f"  Created new team: {new_team.number}")
+
+            # Commit every 100 teams to avoid keeping too much in memory
+            if (updated_count + created_count) % 100 == 0:
+                session.commit()
+                print(f"  Progress: {updated_count} updated, {created_count} created")
+
+            if (updated_count + created_count) >= 10000:
+                print("10000 team limit reached!")
                 break
-        return teams
+
+        # Final commit for remaining teams
+        session.commit()
+        print(
+            f"\nCompleted: {updated_count} teams updated, {created_count} teams created"
+        )
+        return updated_count, created_count
 
     def get_worlds_teams(self) -> list[int] | None:
         event = "/events/58909/teams"
@@ -147,20 +193,25 @@ class RobotEvents:
 
     def create_qualifications_full(
         self,
+        session: Session,
         teams: list[int],
         resume: bool = True,
         progress_tracker: Optional[ProgressTracker] = None,
+        commit_interval: int = 10,
     ):
         """
         Create qualifications for all teams with progress tracking and resumption support.
+        Periodically commits to database to prevent data loss on interruption.
 
         Args:
+            session: SQLModel Session object for database operations
             teams: List of team IDs to process
             resume: Whether to resume from last checkpoint (default: True)
             progress_tracker: Optional ProgressTracker instance (creates new one if None)
+            commit_interval: How often to commit to database (default: every 10 teams)
 
         Returns:
-            List of Qualifications objects
+            Number of qualifications processed
         """
         # Initialize progress tracker
         if progress_tracker is None:
@@ -170,7 +221,7 @@ class RobotEvents:
 
         # worlds_teams = self.get_worlds_teams()
         worlds_teams = None
-        qualifications: list[Qualifications] = []
+        processed_count = 0
 
         try:
             for i in range(start_index, len(teams)):
@@ -182,22 +233,41 @@ class RobotEvents:
                 else:
                     q = self.get_qualifications(team)
 
-                qualifications.append(Qualifications(team_id=team, status=q))
+                # Upsert to database immediately
+                qual_obj = Qualifications(team_id=team, status=q)
+                db.upsert_quals(session, qual_obj)
+                processed_count += 1
 
                 # Update progress tracker
                 progress_tracker.update_progress(i, team, q.name)
+
+                # Periodic commit to save progress to database
+                if processed_count % commit_interval == 0:
+                    session.commit()
+                    progress_tracker._log(
+                        f"Database committed at {processed_count} teams"
+                    )
+
+            # Final commit for any remaining changes
+            session.commit()
 
             # Mark as complete
             progress_tracker.complete()
 
         except KeyboardInterrupt:
-            progress_tracker._log("INTERRUPTED: Progress saved. Run again to resume.")
+            session.commit()  # Save progress before exiting
+            progress_tracker._log(
+                "INTERRUPTED: Progress committed to database. Run again to resume."
+            )
             raise
         except Exception as e:
-            progress_tracker._log(f"ERROR: {e}. Progress saved. Run again to resume.")
+            session.commit()  # Try to save progress even on error
+            progress_tracker._log(
+                f"ERROR: {e}. Progress committed to database. Run again to resume."
+            )
             raise
 
-        return qualifications
+        return processed_count
 
     def create_qualifications_worlds(
         self, teams: list[int]
@@ -228,7 +298,8 @@ class RobotEvents:
         for event in res["data"]:
             if event["awards_finalized"]:
                 ids.append(event["id"])
-        for id in ids:
+        count = 0
+        for id in ids[14:]:
             print("checking sig: ", id)
             res = self.request(f"/events/{id}/awards")
             if not res:
