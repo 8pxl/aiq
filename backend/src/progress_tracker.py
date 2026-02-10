@@ -74,7 +74,7 @@ class ProgressTracker:
             current_index: Current index in the teams list
             team_id: ID of the team just processed
             qualification_status: Qualification status assigned
-            force_save: Force save progress to file (default: saves every 10 teams)
+            force_save: Force save progress to file (default: only logs without saving)
         """
         self.last_processed_index = current_index
         self.last_processed_team_id = team_id
@@ -106,7 +106,8 @@ class ProgressTracker:
                 f"Est. remaining: {estimated_remaining:.0f}s ({estimated_remaining / 60:.1f}m)"
             )
 
-            # Save checkpoint to file
+        # ONLY save checkpoint to file if force_save is True
+        if force_save:
             self._save_progress()
 
     def complete(self):

@@ -222,6 +222,9 @@ class RobotEvents:
         # worlds_teams = self.get_worlds_teams()
         worlds_teams = None
         processed_count = 0
+        last_committed_index = start_index - 1  # Track last index that was committed
+        last_committed_team = None
+        last_committed_status = None
 
         try:
             for i in range(start_index, len(teams)):
@@ -238,30 +241,58 @@ class RobotEvents:
                 db.upsert_quals(session, qual_obj)
                 processed_count += 1
 
-                # Update progress tracker
-                progress_tracker.update_progress(i, team, q.name)
-
                 # Periodic commit to save progress to database
                 if processed_count % commit_interval == 0:
                     session.commit()
+                    # Track what was committed
+                    last_committed_index = i
+                    last_committed_team = team
+                    last_committed_status = q.name
+                    # ONLY update progress tracker AFTER commit succeeds
+                    progress_tracker.update_progress(i, team, q.name, force_save=True)
                     progress_tracker._log(
                         f"Database committed at {processed_count} teams"
                     )
+                # For non-commit iterations, just update progress for logging (don't save checkpoint)
+                elif processed_count % 10 == 0:
+                    progress_tracker.update_progress(i, team, q.name, force_save=False)
 
             # Final commit for any remaining changes
             session.commit()
+            # Update progress tracker with final state
+            if len(teams) > 0:
+                last_idx = len(teams) - 1
+                progress_tracker.update_progress(
+                    last_idx, teams[last_idx], "COMPLETED", force_save=True
+                )
 
             # Mark as complete
             progress_tracker.complete()
 
         except KeyboardInterrupt:
             session.commit()  # Save progress before exiting
+            # Update progress tracker to reflect what was just committed
+            if last_committed_index >= start_index and last_committed_team is not None:
+                progress_tracker.update_progress(
+                    last_committed_index,
+                    last_committed_team,
+                    last_committed_status or "UNKNOWN",
+                    force_save=True,
+                )
             progress_tracker._log(
                 "INTERRUPTED: Progress committed to database. Run again to resume."
             )
             raise
         except Exception as e:
             session.commit()  # Try to save progress even on error
+            # Update progress tracker to reflect what was just committed
+            if last_committed_index >= start_index and last_committed_team is not None:
+                progress_tracker.update_progress(
+                    last_committed_index,
+                    last_committed_team,
+                    last_committed_status or "UNKNOWN",
+                    force_save=True,
+                )
             progress_tracker._log(
                 f"ERROR: {e}. Progress committed to database. Run again to resume."
             )
