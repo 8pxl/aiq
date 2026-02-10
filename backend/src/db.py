@@ -28,8 +28,8 @@ def get_all_teams(session: Session) -> list[int]:
     return list(
         session.exec(
             select(Teams.id)
-            .where(Teams.region == "California - Region 4")
-            .where(Teams.grade == "High School")
+            # .where(Teams.region == "California - Region 4")
+            # .where(Teams.grade == "High School")
         ).all()
     )
 

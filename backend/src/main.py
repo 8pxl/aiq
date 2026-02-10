@@ -5,6 +5,7 @@ from sqlmodel import SQLModel, Session, create_engine
 import db
 from robotevents import RobotEvents
 from tables import Qualification, Teams, Qualifications
+from progress_tracker import ProgressTracker
 import os
 from fastapi import FastAPI
 from api.api import *
@@ -17,42 +18,37 @@ if not load_dotenv():
 # print("fast step")
 robotevents = RobotEvents(os.environ["ROBOTEVENTS_AUTH_TOKEN"])
 SQLModel.metadata.create_all(db.engine)
-# with Session(db.engine) as session:
-    # while True:
-    #     print("hi")
-    #     time.sleep(100)
-        # continue
-        # timeElapsed = datetime.now() - db.get_last_slow_update(session)
-        # if timeElapsed > timedelta(days=2):
-        #     all_teams = db.get_all_teams(session)
-        #     qualifications = robotevents.create_qualifications_full(all_teams)
-        #     for q in qualifications:
-        #         db.upsert_quals(session, q)
-        #     db.set_update_time(session)
 
-# db.set_update_time(engine)
-# teams = robotevents.parse_skills(True)
-# for team in teams:
-#     db.upsert(engine,team)
-#     print("adding ", team)
+# Create progress tracker for the long-running qualification creation
+progress_tracker = ProgressTracker(log_file="qualification_progress.log")
 
-# print(robotevents.create_qualifications_sig())
+# print("\n" + "=" * 80)
+# print("Starting qualification creation process (this may take over 1 hour)")
+# print("Progress will be logged to: qualification_progress.log")
+# print("Progress checkpoint saved to: qualification_progress.json")
+# print("You can safely interrupt and resume this process.")
+# print("=" * 80 + "\n")
 
-qualifications = robotevents.create_qualifications_sig()
-if qualifications:
+with Session(db.engine) as session:
+    # First, create qualifications from signature events
+    qualifications = robotevents.create_qualifications_sig()
+    if qualifications:
+        for q in qualifications:
+            db.upsert_quals(session, q)
+
+    # Then, create qualifications for all teams (long-running process)
+    all_teams = db.get_all_teams(session)
+    qualifications = robotevents.create_qualifications_full(
+        all_teams,
+        resume=True,  # Enable resumption from last checkpoint
+        progress_tracker=progress_tracker,
+    )
+
+    print("Updating database with qualifications...")
     for q in qualifications:
-        db.upsert_quals(engine, q)
+        db.upsert_quals(session, q)
 
-#
-# print(datetime.now()-db.get_last_slow_update(engine) > timedelta(seconds=60))
-# 169926
-# 186744
-
-all_teams = db.get_all_teams(engine)
-qualifications  = robotevents.create_qualifications_full(all_teams)
-print("updating qualifications!")
-for q in qualifications:
-    db.upsert_quals(engine, q)
+    print("Qualification creation completed!")
 
 # manual_qualifications = ["15442A", "2054V", "16689A", "6008G", "884A", "3004A"]
 #

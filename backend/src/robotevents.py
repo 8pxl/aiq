@@ -1,10 +1,11 @@
 import logging
 import time
-from typing import Any
+from typing import Any, Optional
 import requests
 from enum import Enum
 import db
 from tables import Qualification, Qualifications, Teams
+from progress_tracker import ProgressTracker
 
 
 class RobotEvents:
@@ -144,22 +145,58 @@ class RobotEvents:
                 teams.append(team["id"])
         return teams
 
-    def create_qualifications_full(self, teams: list[int]):
+    def create_qualifications_full(
+        self,
+        teams: list[int],
+        resume: bool = True,
+        progress_tracker: Optional[ProgressTracker] = None,
+    ):
+        """
+        Create qualifications for all teams with progress tracking and resumption support.
+
+        Args:
+            teams: List of team IDs to process
+            resume: Whether to resume from last checkpoint (default: True)
+            progress_tracker: Optional ProgressTracker instance (creates new one if None)
+
+        Returns:
+            List of Qualifications objects
+        """
+        # Initialize progress tracker
+        if progress_tracker is None:
+            progress_tracker = ProgressTracker()
+
+        start_index = progress_tracker.initialize(len(teams), resume=resume)
+
         # worlds_teams = self.get_worlds_teams()
         worlds_teams = None
-        q = Qualification.NONE
         qualifications: list[Qualifications] = []
-        now = time.time()
-        for team in teams:
-            # print(time.time() - now)
-            now = time.time()
-            # if len(qualifications) > 1000:
-            #     break
-            if worlds_teams and team in worlds_teams:
-                q = Qualification.WORLD
-            else:
-                q = self.get_qualifications(team)
-            qualifications.append(Qualifications(team_id=team, status=q))
+
+        try:
+            for i in range(start_index, len(teams)):
+                team = teams[i]
+
+                # Determine qualification status
+                if worlds_teams and team in worlds_teams:
+                    q = Qualification.WORLD
+                else:
+                    q = self.get_qualifications(team)
+
+                qualifications.append(Qualifications(team_id=team, status=q))
+
+                # Update progress tracker
+                progress_tracker.update_progress(i, team, q.name)
+
+            # Mark as complete
+            progress_tracker.complete()
+
+        except KeyboardInterrupt:
+            progress_tracker._log("INTERRUPTED: Progress saved. Run again to resume.")
+            raise
+        except Exception as e:
+            progress_tracker._log(f"ERROR: {e}. Progress saved. Run again to resume.")
+            raise
+
         return qualifications
 
     def create_qualifications_worlds(
