@@ -26,7 +26,7 @@ if not mysql_password:
         print("\nError: Password input cancelled")
         sys.exit(1)
 
-mysqlurl = f"mysql+pymysql://root:{mysql_password}@127.0.0.1:3306/aiq"
+mysqlurl = "mysql+pymysql://fastapi_user:password@127.0.0.1:3306/aiq"
 engine = create_engine(mysqlurl, echo=False)
 SQLModel.metadata.create_all(engine)
 
