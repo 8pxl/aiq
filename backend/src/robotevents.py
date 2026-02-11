@@ -25,7 +25,25 @@ class RobotEvents:
         self.header = {"Authorization": f"Bearer {token}"}
         self.progress_tracker = progress_tracker
 
-    def request(self, path: str, max_retries=5, delay=17) -> Any | None:  # pyright: ignore[reportExplicitAny]
+    def request(
+        self,
+        path: str,
+        max_retries=5,
+        base_delay=2,
+        max_delay=60,
+    ) -> Any | None:  # pyright: ignore[reportExplicitAny]
+        """
+        Make an API request with exponential backoff retry logic.
+
+        Args:
+            path: API endpoint path (must start with /)
+            max_retries: Maximum number of retry attempts (default: 5)
+            base_delay: Initial delay in seconds for exponential backoff (default: 2)
+            max_delay: Maximum delay in seconds (default: 60)
+
+        Returns:
+            JSON response data or None on failure
+        """
         if not path.startswith("/"):
             error_msg = f"ERROR: path needs to start with a forward slash: {path}"
             self.logger.error(error_msg)
@@ -56,7 +74,11 @@ class RobotEvents:
                     self.progress_tracker._log(error_msg)
 
                 if attempt < max_retries - 1:
-                    retry_msg = f"  ⟳ RETRYING in {delay} seconds..."
+                    # Exponential backoff: 2, 4, 8, 16, 32, ... (capped at max_delay)
+                    delay = min(base_delay * (2**attempt), max_delay)
+                    retry_msg = (
+                        f"  ⟳ RETRYING in {delay:.1f} seconds (exponential backoff)..."
+                    )
                     self.logger.warning(retry_msg)
                     if self.progress_tracker:
                         self.progress_tracker._log(retry_msg)
@@ -74,7 +96,11 @@ class RobotEvents:
                     self.progress_tracker._log(error_msg)
 
                 if attempt < max_retries - 1:
-                    retry_msg = f"  ⟳ RETRYING in {delay} seconds..."
+                    # Exponential backoff: 2, 4, 8, 16, 32, ... (capped at max_delay)
+                    delay = min(base_delay * (2**attempt), max_delay)
+                    retry_msg = (
+                        f"  ⟳ RETRYING in {delay:.1f} seconds (exponential backoff)..."
+                    )
                     self.logger.warning(retry_msg)
                     if self.progress_tracker:
                         self.progress_tracker._log(retry_msg)
@@ -84,49 +110,6 @@ class RobotEvents:
                     self.logger.error(final_msg)
                     if self.progress_tracker:
                         self.progress_tracker._log(final_msg)
-
-        return None
-        url = self.base + path
-
-        for attempt in range(max_retries):
-            try:
-                res = requests.get(url, headers=self.header)
-                res.raise_for_status()
-                # Log successful request on first attempt or after retry
-                if attempt > 0:
-                    self.logger.info(
-                        "SUCCESS: Request succeeded on attempt %d: %s", attempt + 1, url
-                    )
-                return res.json()  # pyright: ignore[reportAny]
-
-            except requests.HTTPError as exc:
-                status_code = exc.response.status_code if exc.response else "unknown"
-                self.logger.error(
-                    "HTTP ERROR [%s]: %s (attempt %d/%d)",
-                    status_code,
-                    url,
-                    attempt + 1,
-                    max_retries,
-                )
-                if attempt < max_retries - 1:
-                    self.logger.warning("RETRYING in %d seconds...", delay)
-                    time.sleep(delay)
-                else:
-                    self.logger.error("FAILED: Max retries reached for %s", url)
-
-            except requests.RequestException as exc:
-                self.logger.error(
-                    "REQUEST ERROR: %s - %s (attempt %d/%d)",
-                    type(exc).__name__,
-                    url,
-                    attempt + 1,
-                    max_retries,
-                )
-                if attempt < max_retries - 1:
-                    self.logger.warning("RETRYING in %d seconds...", delay)
-                    time.sleep(delay)
-                else:
-                    self.logger.error("FAILED: Max retries reached for %s", url)
 
         return None
 
