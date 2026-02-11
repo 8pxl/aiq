@@ -122,25 +122,10 @@ export type GetLeaderboardLbGetResponses = {
 
 export type GetQualificationsQualificationsGetData = {
     body?: never;
-    headers: {
-        /**
-         * Authorization
-         */
-        authorization: string | null;
-    };
     path?: never;
     query?: never;
     url: '/qualifications';
 };
-
-export type GetQualificationsQualificationsGetErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type GetQualificationsQualificationsGetError = GetQualificationsQualificationsGetErrors[keyof GetQualificationsQualificationsGetErrors];
 
 export type GetQualificationsQualificationsGetResponses = {
     /**
@@ -178,6 +163,35 @@ export type PutQualificationsQualificationsPutErrors = {
 export type PutQualificationsQualificationsPutError = PutQualificationsQualificationsPutErrors[keyof PutQualificationsQualificationsPutErrors];
 
 export type PutQualificationsQualificationsPutResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
+export type GetLastSlowLastSlowGetData = {
+    body?: never;
+    headers: {
+        /**
+         * Authorization
+         */
+        authorization: string | null;
+    };
+    path?: never;
+    query?: never;
+    url: '/lastSlow';
+};
+
+export type GetLastSlowLastSlowGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetLastSlowLastSlowGetError = GetLastSlowLastSlowGetErrors[keyof GetLastSlowLastSlowGetErrors];
+
+export type GetLastSlowLastSlowGetResponses = {
     /**
      * Successful Response
      */
