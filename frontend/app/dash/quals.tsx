@@ -114,7 +114,12 @@ export default function QualsDisplay({ refresh }: Qdprops) {
   const [data, setData] = useState<QualificationEntry[]>([]);
   useEffect(() => {
     async function fetchData() {
-      const res = await getQualificationsQualificationsGet({});
+      const res = await getQualificationsQualificationsGet({
+        headers: {
+          authorization: "",
+        },
+      }
+      );
       if (!res.response.ok) {
         console.error(`HTTP error! status: ${res.response.status}`)
         throw new Error(`HTTP error! status: ${res.response.status}`);

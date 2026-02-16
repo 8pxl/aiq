@@ -8,7 +8,7 @@ import { ExtractDisplay } from "./extract";
 import InfoDisplay from "./info";
 
 function Header() {
-  async function handleSignOut(e: MouseEvent<HTMLAnchorElement>) {
+  async function handleSignOut(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
     await authClient.signOut()
     window.location.href = "/";
