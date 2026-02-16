@@ -14,9 +14,6 @@ export default function Header() {
   return (
     <div className="flex flex-row justify-around">
       <Logo />
-      <Link href="/dash" className="text-nowrap">
-        open dashboard
-      </Link>
     </div>
   );
 }
