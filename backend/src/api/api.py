@@ -1,36 +1,13 @@
-from typing import Annotated
-import os
-
-from fastapi import (
-    APIRouter,
-    Depends,
-    FastAPI,
-    Header,
-    HTTPException,
-    Query,
-    Request,
-    Response,
-    Cookie,
-    status,
-)
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Query, status
 from sqlalchemy.orm import query
 from sqlmodel import Session, select
-from pydantic import BaseModel
+from typing import Annotated
 
-from api.auth_native import (
-    LoginRequest,
-    SignUpRequest,
-    SessionResponse,
-    get_current_user,
-    get_session,
-    login,
-    logout,
-    require_auth,
-    sign_up,
-)
+# from api import auth
 import db
-from tables import Qualification, Qualifications, Teams, User
+from tables import Qualification, Qualifications, Teams
+
+from pydantic import BaseModel
 
 
 class LeaderboardEntry(BaseModel):
@@ -44,7 +21,6 @@ class LeaderboardEntry(BaseModel):
     driver: int
     programming: int
 
-
 class TeamQualificationOut(BaseModel):
     number: str
     organization: str
@@ -55,67 +31,21 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# CORS Configuration
-# TODO: Update allow_origins to your specific domains in production
-# Example: allow_origins=["https://your-app.netlify.app", "http://localhost:3000"]
-ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS != ["*"] else ["*"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# Auth routes
-@app.post("/auth/sign-in", response_model=SessionResponse)
-async def sign_in_endpoint(
-    request: Request,
-    login_data: LoginRequest,
-    response: Response,
-    session: Session = Depends(db.get_session),
-):
-    return await login(request, login_data, response, session)
-
-
-@app.post("/auth/sign-out")
-async def sign_out_endpoint(
-    response: Response,
-    session: Session = Depends(db.get_session),
-    access_token: str | None = Cookie(None),
-):
-    return await logout(response, session, access_token)
-
-
-@app.get("/auth/session", response_model=SessionResponse)
-async def get_auth_session(
-    current_user: Annotated[User | None, Depends(get_current_user)],
-):
-    return await get_session(current_user)
-
-
-# Optional: signup endpoint (you can remove this if not needed)
-@app.post("/auth/sign-up", response_model=SessionResponse)
-async def sign_up_endpoint(
-    request: Request,
-    signup_data: SignUpRequest,
-    response: Response,
-    session: Session = Depends(db.get_session),
-):
-    return await sign_up(request, signup_data, response, session)
-
-
-# Protected endpoints
-@app.get("/teams")
-def get_teams(
-    session: Session = Depends(db.get_session),
-    _: User = Depends(require_auth),
-):
-    print("getting teams")
-    return {"code": 200, "result": db.get_all_teams(session)}
-
+# @app.get("/teams")
+# def get_teams(
+#     session: Session = Depends(db.get_session), _=Depends(auth.authenticate_user)
+# ):
+#     print("getting ateams ts")
+#     return {"code": 200, "result": db.get_all_teams(session)}
 
 @app.get("/regions")
 def get_regions(session: Session = Depends(db.get_session)):
@@ -152,7 +82,7 @@ def get_leaderboard(
 
     for excluded_status in exclude_statuses:
         query = query.where(Qualifications.status != excluded_status)
-
+    
     if region is not None:
         query = query.where(Teams.region == region)
 
@@ -161,7 +91,7 @@ def get_leaderboard(
     result = [
         LeaderboardEntry(
             number=number,
-            status=qual_status,
+            status=qual_status, 
             organization=organization,
             country=country,
             region=reg,
@@ -177,7 +107,8 @@ def get_leaderboard(
 
 
 @app.get("/qualifications")
-def get_qualifications(session: Session = Depends(db.get_session)):
+def get_qualifications(
+        session: Session = Depends(db.get_session)):
     stmt = select(
         Teams.number,
         Teams.organization,
@@ -195,37 +126,32 @@ def get_qualifications(session: Session = Depends(db.get_session)):
         for number, organization, status in rows
     ]
 
-
-@app.get("/lastSlow")
-def get_last_slow(
-    session: Session = Depends(db.get_session),
-    _: User = Depends(require_auth),
-):
-    return db.get_last_slow_update(session)
-
+# @app.get("/lastSlow")
+# def get_last_slow(
+#     session: Session = Depends(db.get_session),
+#     _ = Depends(auth.authenticate_user)):
+#     return db.get_last_slow_update(session)
 
 # @app.post("/update")
 # def trigger_update(
 #     session: Session = Depends(db.get_session),
-#         _: User = Depends(require_auth)):
+#         _ = Depends(auth.authenticate_user)):
 #     pass
 
-
-@app.put("/qualifications")
-def put_qualifications(
-    team: str,
-    status: Qualification,
-    session: Session = Depends(db.get_session),
-    _: User = Depends(require_auth),
-):
-    try:
-        db.update_quals(
-            session,
-            Qualifications(team_id=db.number_to_id(session, team), status=status),
-        )
-    except Exception as e:
-        print(e)
-        raise HTTPException(status_code=400, detail=str(e))
+# @app.put("/qualifications")
+# def put_qualifications(
+#     team: str,
+#     status: Qualification,
+#     session: Session = Depends(db.get_session),
+#     _=Depends(auth.authenticate_user),
+# ):
+#     try:
+#         db.update_quals(
+#             session, Qualifications(team_id=db.number_to_id(session, team), status=status)
+#         )
+#     except Exception as e:
+#         print(e)
+#         raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.get("/")
