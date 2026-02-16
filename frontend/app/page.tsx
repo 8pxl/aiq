@@ -8,7 +8,7 @@ export default async function Home() {
   const fetchData = async () => {
     try {
       const res = await getRegionsRegionsGet();
-      console.log(res);
+      // console.log(res);
       if (!res.response.ok) {
         throw new Error(`HTTP error! status: ${res.response.status}`);
       }
@@ -18,7 +18,20 @@ export default async function Home() {
       throw e;
     }
   };
-  const regions = (await fetchData()) as Array<string>;
+
+  const responseData = await fetchData();
+
+  // Handle different possible response formats
+  let regions: Array<string> = [];
+  if (Array.isArray(responseData)) {
+    regions = responseData;
+  } else if (responseData && typeof responseData === 'object') {
+    regions = (responseData as any).regions ||
+      (responseData as any).data ||
+      (responseData as any).result ||
+      [];
+  }
+
   regions.unshift("All");
 
   return (

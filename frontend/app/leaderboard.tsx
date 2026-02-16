@@ -113,8 +113,23 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
           throw new Error(`HTTP error! status: ${res.response.status}`);
         }
 
-        const responseData = res.data as { result: LeaderboardEntry[] };
-        setData(responseData.result || []);
+        // Handle different possible response formats
+        const responseData = res.data;
+        let entries: LeaderboardEntry[] = [];
+        console.log(responseData);
+
+        if (Array.isArray(responseData)) {
+          // Direct array response
+          entries = responseData;
+        } else if (responseData && typeof responseData === 'object') {
+          // Nested object response - check common property names
+          entries = (responseData as any).result ||
+            (responseData as any).data ||
+            (responseData as any).leaderboard ||
+            [];
+        }
+
+        setData(entries);
       } catch (e) {
         console.error(e);
         throw e;
