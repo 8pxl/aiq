@@ -421,7 +421,7 @@ class RobotEvents:
             if event["awards_finalized"]:
                 ids.append(event["id"])
         count = 0
-        for id in ids[14:]:
+        for id in ids:  # Process all signature events, not just starting from index 14
             print("checking sig: ", id)
             res = self.request(f"/events/{id}/awards")
             if not res:

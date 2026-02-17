@@ -84,7 +84,13 @@ def qualify(session: Session, id: int):
     session.commit()
 
 
-def set_update_time(session: Session):
+def set_update_time(session: Session, update_type: str = "full"):
+    """Update the last update timestamp.
+
+    Args:
+        session: Database session
+        update_type: Type of update - "full", "skills", or "signature" (for logging purposes)
+    """
     metadata = session.get(Metadata, 1)
     if not metadata:
         print("metadata doesnt exist!")
@@ -93,6 +99,7 @@ def set_update_time(session: Session):
         # session.add(metadata)
     metadata.last_slow_update = datetime.now()
     session.commit()
+    print(f"Updated timestamp for {update_type} update at {metadata.last_slow_update}")
 
 
 def get_last_slow_update(session: Session) -> datetime:

@@ -6,11 +6,13 @@ import db
 from robotevents import RobotEvents
 from tables import Qualification, Teams, Qualifications
 from progress_tracker import ProgressTracker
+from scheduler import DailyTaskScheduler
 import os
 import sys
 from fastapi import FastAPI
 from api.api import *
 from dotenv import load_dotenv
+import atexit
 
 # Load .env file
 if not load_dotenv():
@@ -30,13 +32,26 @@ if not robotevents_token:
         print("\nError: Token input cancelled")
         sys.exit(1)
 
-# print("fast step")
-# Create progress tracker for the long-running qualification creation
-progress_tracker = ProgressTracker(log_file="qualification_progress.log")
-
 # Initialize RobotEvents with progress tracker for API request logging
+progress_tracker = ProgressTracker(log_file="qualification_progress.log")
 robotevents = RobotEvents(robotevents_token, progress_tracker=progress_tracker)
 SQLModel.metadata.create_all(db.engine)
+
+# Initialize and start the daily task scheduler
+task_scheduler = DailyTaskScheduler(robotevents, db.engine)
+task_scheduler.start()
+
+# Ensure scheduler stops gracefully on exit
+atexit.register(task_scheduler.stop)
+
+print("Daily task scheduler initialized!")
+print("- Skills parsing: Daily at 2:00 AM")
+print("- Signature qualifications: Daily at 3:00 AM")
+print()
+
+# Optional: Run tasks immediately on startup (comment out if not needed)
+# Uncomment the following line to run tasks on startup:
+# task_scheduler.run_now("both")
 
 
 with Session(db.engine) as session:
@@ -51,13 +66,14 @@ with Session(db.engine) as session:
     # failed = [51097, 113192, 119951,172903, 178864,193590]
 
     delta = datetime.now() - db.get_last_slow_update(session)
-    if delta > timedelta(days = 7):
+    print(delta)
+    if delta > timedelta(days=7):
         print("last update was: ", db.get_last_slow_update(session))
         all_teams = db.get_all_teams(session)
         print(f"\nProcessing qualifications for {len(all_teams)} teams...")
 
         # This now commits to DB periodically, so no need to return qualifications list
-        # 
+        #
         processed_count = robotevents.create_qualifications_full(
             session=session,  # Pass session for database operations
             teams=all_teams,
