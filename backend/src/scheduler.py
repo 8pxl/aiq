@@ -98,7 +98,9 @@ class DailyTaskScheduler:
         try:
             with Session(self.engine) as session:
                 # Get teams registered for Worlds and build qualifications
-                qualifications = self.robotevents.create_qualifications_worlds(teams=[])
+                qualifications = self.robotevents.create_qualifications_worlds(
+                    session=session
+                )
 
                 if qualifications:
                     logger.info(

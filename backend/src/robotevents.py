@@ -242,7 +242,7 @@ class RobotEvents:
         )
         return updated_count, created_count
 
-    def get_worlds_teams(self) -> list[int] | None:
+    def get_worlds_teams(self) -> list[dict] | None:
         event = "/events/64025/teams"
 
         res = self.request(event)
@@ -255,9 +255,8 @@ class RobotEvents:
             res = self.request(event + f"?page={i}")
             if not res:
                 continue
-            res = res["data"]
-            for team in res:
-                teams.append(team["id"])
+            for team in res["data"]:
+                teams.append(team)
         return teams
 
     def create_qualifications_full(
@@ -388,15 +387,44 @@ class RobotEvents:
         return processed_count
 
     def create_qualifications_worlds(
-        self, teams: list[int]
+        self, session: Session
     ) -> list[Qualifications] | None:
         worlds_teams = self.get_worlds_teams()
         if not worlds_teams:
             return None
-        return [
-            Qualifications(team_id=id, status=Qualification.WORLD)
-            for id in worlds_teams
-        ]
+
+        qualifications = []
+        for team_data in worlds_teams:
+            team_id = team_data["id"]
+
+            # Create team if it doesn't exist in the database
+            existing_team = session.get(Teams, team_id)
+            if not existing_team:
+                location = team_data.get("location", {})
+                country = location.get("country", "")
+                region = location.get("region", "") or country
+
+                new_team = Teams(
+                    id=team_id,
+                    number=team_data["number"],
+                    organization=team_data.get("organization", ""),
+                    country=country,
+                    region=region,
+                    grade=team_data.get("grade", ""),
+                    world_rank=0,
+                    score=0,
+                    programming=0,
+                    driver=0,
+                )
+                session.add(new_team)
+                session.commit()
+                print(f"  Created new team from Worlds registration: {new_team.number}")
+
+            qualifications.append(
+                Qualifications(team_id=team_id, status=Qualification.WORLD)
+            )
+
+        return qualifications
 
     def award_contains(self, award: str, strings: list[str]) -> bool:
         for s in strings:
