@@ -252,14 +252,10 @@ class RobotEvents:
         print(pages)
         teams = []
         for i in range(1, pages + 1):
-            if i >= 2:
-                break
             res = self.request(event + f"?page={i}")
             if not res:
                 continue
             res = res["data"]
-            page = 1
-            print(len(res))
             for team in res:
                 teams.append(team["id"])
         return teams
