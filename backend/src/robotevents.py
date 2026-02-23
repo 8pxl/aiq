@@ -243,7 +243,7 @@ class RobotEvents:
         return updated_count, created_count
 
     def get_worlds_teams(self) -> list[int] | None:
-        event = "/events/4025/teams"
+        event = "/events/64025/teams"
 
         res = self.request(event)
         if not res:
