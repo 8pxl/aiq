@@ -47,11 +47,11 @@ atexit.register(task_scheduler.stop)
 print("Daily task scheduler initialized!")
 print("- Skills parsing: Daily at 2:00 AM")
 print("- Signature qualifications: Daily at 3:00 AM")
+print("- Worlds qualifications: Daily at 4:00 AM")
 print()
 
-# Optional: Run tasks immediately on startup (comment out if not needed)
-# Uncomment the following line to run tasks on startup:
-# task_scheduler.run_now("both")
+# Run worlds qualifications on startup
+task_scheduler.run_now("worlds")
 
 
 with Session(db.engine) as session:
