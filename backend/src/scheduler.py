@@ -91,6 +91,40 @@ class DailyTaskScheduler:
                 f"Error during signature qualifications update: {e}", exc_info=True
             )
 
+    def update_worlds_qualifications_task(self):
+        """Daily task to update World Championship qualifications from registered teams."""
+        logger.info("Starting worlds qualifications update task...")
+
+        try:
+            with Session(self.engine) as session:
+                # Get teams registered for Worlds and build qualifications
+                qualifications = self.robotevents.create_qualifications_worlds(teams=[])
+
+                if qualifications:
+                    logger.info(
+                        f"Processing {len(qualifications)} worlds qualifications..."
+                    )
+
+                    # Upsert qualifications to database
+                    for q in qualifications:
+                        db.upsert_quals(session, q)
+
+                    session.commit()
+
+                    # Update timestamp
+                    db.set_update_time(session, update_type="worlds")
+
+                    logger.info(
+                        f"Worlds qualifications completed! Processed {len(qualifications)} teams"
+                    )
+                else:
+                    logger.warning("No worlds qualifications found")
+
+        except Exception as e:
+            logger.error(
+                f"Error during worlds qualifications update: {e}", exc_info=True
+            )
+
     def start(self):
         """Start the scheduler with daily tasks."""
         # Schedule skills parsing every day at 2:00 AM
@@ -113,6 +147,16 @@ class DailyTaskScheduler:
         )
         logger.info("Scheduled: Signature qualifications - Daily at 3:00 AM")
 
+        # Schedule worlds qualifications update every day at 4:00 AM
+        self.scheduler.add_job(
+            self.update_worlds_qualifications_task,
+            trigger=CronTrigger(hour=4, minute=0),
+            id="daily_worlds_quals",
+            name="Daily Worlds Qualifications Update",
+            replace_existing=True,
+        )
+        logger.info("Scheduled: Worlds qualifications - Daily at 4:00 AM")
+
         # Start the scheduler
         self.scheduler.start()
         logger.info("Scheduler started successfully!")
@@ -127,16 +171,20 @@ class DailyTaskScheduler:
             self.scheduler.shutdown()
             logger.info("Scheduler stopped")
 
-    def run_now(self, task: str = "both"):
+    def run_now(self, task: str = "all"):
         """Manually trigger tasks immediately (useful for testing).
 
         Args:
-            task: Which task to run - "skills", "signature", or "both"
+            task: Which task to run - "skills", "signature", "worlds", or "all"
         """
-        if task in ["skills", "both"]:
+        if task in ["skills", "all"]:
             logger.info("Manually triggering skills parsing...")
             self.parse_skills_task()
 
-        if task in ["signature", "both"]:
+        if task in ["signature", "all"]:
             logger.info("Manually triggering signature qualifications...")
             self.update_signature_qualifications_task()
+
+        if task in ["worlds", "all"]:
+            logger.info("Manually triggering worlds qualifications...")
+            self.update_worlds_qualifications_task()
