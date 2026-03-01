@@ -67,6 +67,7 @@ with Session(db.engine) as session:
 
     delta = datetime.now() - db.get_last_slow_update(session)
     print(delta)
+    manual_qualifications = ["15442A", "2054V", "16689A", "6008G", "884A", "3004A", "8917B", "2982X","1523C","95071Y"]
     if delta > timedelta(days=7):
         print("last update was: ", db.get_last_slow_update(session))
         all_teams = db.get_all_teams(session)
@@ -84,10 +85,10 @@ with Session(db.engine) as session:
 
         print(f"Qualification creation completed! Processed {processed_count} teams.")
 
+
         # Update metadata timestamp
         db.set_update_time(session)
 
-#     manual_qualifications = ["15442A", "2054V", "16689A", "6008G", "884A", "3004A", "8917B"]
 # #
 #     for id in [db.number_to_id(session, number) for number in manual_qualifications]:
 #         db.upsert_quals(session, Qualifications(
