@@ -379,12 +379,12 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
                     </TableCell>
                   )}
                   {!hiddenColumnsSet.has("region") && (
-                    <TableCell>{row.region}</TableCell>
+                    <TableCell>
+                      {getCountryFlag(row.country)} {row.region}
+                    </TableCell>
                   )}
                   {!hiddenColumnsSet.has("country") && (
-                    <TableCell>
-                      {getCountryFlag(row.country)} {row.country}
-                    </TableCell>
+                    <TableCell>{row.country}</TableCell>
                   )}
                   {!hiddenColumnsSet.has("score") && (
                     <TableCell>{row.score}</TableCell>
