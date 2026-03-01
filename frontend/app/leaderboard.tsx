@@ -70,6 +70,75 @@ const DEFAULT_HIDDEN_COLUMNS: SortKey[] = ["country", "status"];
 // Statuses excluded by default
 const DEFAULT_EXCLUDED_STATUSES: Qualification[] = [2];
 
+// Helper function to convert country name to flag emoji
+const getCountryFlag = (country: string): string => {
+  const countryToCode: Record<string, string> = {
+    "United States": "US",
+    "USA": "US",
+    "Canada": "CA",
+    "Mexico": "MX",
+    "China": "CN",
+    "Japan": "JP",
+    "South Korea": "KR",
+    "India": "IN",
+    "United Kingdom": "GB",
+    "UK": "GB",
+    "Germany": "DE",
+    "France": "FR",
+    "Italy": "IT",
+    "Spain": "ES",
+    "Australia": "AU",
+    "Brazil": "BR",
+    "Argentina": "AR",
+    "Netherlands": "NL",
+    "Switzerland": "CH",
+    "Sweden": "SE",
+    "Norway": "NO",
+    "Denmark": "DK",
+    "Finland": "FI",
+    "Poland": "PL",
+    "Austria": "AT",
+    "Belgium": "BE",
+    "Ireland": "IE",
+    "Portugal": "PT",
+    "Greece": "GR",
+    "Turkey": "TR",
+    "Russia": "RU",
+    "Singapore": "SG",
+    "Malaysia": "MY",
+    "Thailand": "TH",
+    "Vietnam": "VN",
+    "Philippines": "PH",
+    "Indonesia": "ID",
+    "New Zealand": "NZ",
+    "South Africa": "ZA",
+    "Israel": "IL",
+    "Saudi Arabia": "SA",
+    "United Arab Emirates": "AE",
+    "UAE": "AE",
+    "Egypt": "EG",
+    "Chile": "CL",
+    "Colombia": "CO",
+    "Peru": "PE",
+    "Venezuela": "VE",
+    "Czech Republic": "CZ",
+    "Hungary": "HU",
+    "Romania": "RO",
+    "Ukraine": "UA",
+    "Taiwan": "TW",
+    "Hong Kong": "HK",
+  };
+
+  const code = countryToCode[country];
+  if (!code) return "";
+  
+  // Convert country code to flag emoji
+  const codePoints = code
+    .split("")
+    .map((char) => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
+};
+
 export default function LeaderBoard({ regions }: { regions: Array<string> }) {
   const [data, setData] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(false);
@@ -297,9 +366,9 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
               </TableRow>
             ) : (
               sortedData.map((row, idx) => (
-                <TableRow key={`${row.number}-${idx}`}>
+                <TableRow key={`${row.number}-${idx}`} className={idx >= 10 ? "bg-muted/20" : ""}>
                   {!hiddenColumnsSet.has("world_rank") && (
-                    <TableCell>{row.world_rank}</TableCell>
+                    <TableCell>{idx + 1} ({row.world_rank})</TableCell>
                   )}
                   {!hiddenColumnsSet.has("number") && (
                     <TableCell className="font-medium">{row.number}</TableCell>
@@ -313,7 +382,9 @@ export default function LeaderBoard({ regions }: { regions: Array<string> }) {
                     <TableCell>{row.region}</TableCell>
                   )}
                   {!hiddenColumnsSet.has("country") && (
-                    <TableCell>{row.country}</TableCell>
+                    <TableCell>
+                      {getCountryFlag(row.country)} {row.country}
+                    </TableCell>
                   )}
                   {!hiddenColumnsSet.has("score") && (
                     <TableCell>{row.score}</TableCell>
