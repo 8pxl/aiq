@@ -103,12 +103,13 @@ class DailyTaskScheduler:
                 )
 
                 if qualifications:
-                    logger.info(
-                        f"Processing {len(qualifications)} worlds qualifications..."
-                    )
+                    print(f"Processing {len(qualifications)} worlds qualifications...")
 
                     # Upsert qualifications to database
                     for q in qualifications:
+                        print(
+                            f"Upserting WORLD qualification to DB for team_id {q.team_id}"
+                        )
                         db.upsert_quals(session, q)
 
                     session.commit()
@@ -116,11 +117,11 @@ class DailyTaskScheduler:
                     # Update timestamp
                     db.set_update_time(session, update_type="worlds")
 
-                    logger.info(
+                    print(
                         f"Worlds qualifications completed! Processed {len(qualifications)} teams"
                     )
                 else:
-                    logger.warning("No worlds qualifications found")
+                    print("No worlds qualifications found")
 
         except Exception as e:
             logger.error(

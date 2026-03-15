@@ -243,7 +243,7 @@ class RobotEvents:
         return updated_count, created_count
 
     def get_worlds_teams(self) -> list[dict] | None:
-        event = "/events/64025/teams"
+        event = "/events/4025/teams"
 
         res = self.request(event)
         if not res:
@@ -396,17 +396,19 @@ class RobotEvents:
         qualifications = []
         for team_data in worlds_teams:
             team_id = team_data["id"]
+            team_num = team_data.get("number", "Unknown")
 
             # Create team if it doesn't exist in the database
             existing_team = session.get(Teams, team_id)
             if not existing_team:
+                print(f"Creating new team: {team_num} (ID: {team_id})")
                 location = team_data.get("location", {})
                 country = location.get("country", "")
                 region = location.get("region", "") or country
 
                 new_team = Teams(
                     id=team_id,
-                    number=team_data["number"],
+                    number=team_num,
                     organization=team_data.get("organization", ""),
                     country=country,
                     region=region,
@@ -418,8 +420,11 @@ class RobotEvents:
                 )
                 session.add(new_team)
                 session.commit()
-                print(f"  Created new team from Worlds registration: {new_team.number}")
+                print(f"  Successfully created team: {new_team.number}")
 
+            print(
+                f"Adding WORLD qualification to list: Team {team_num} (ID: {team_id})"
+            )
             qualifications.append(
                 Qualifications(team_id=team_id, status=Qualification.WORLD)
             )
